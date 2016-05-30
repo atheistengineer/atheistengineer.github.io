@@ -149,7 +149,7 @@ gulp.task('test', ['start:server:test'], function () {
 gulp.task('bower', function () {
   return gulp.src(paths.views.main)
     .pipe(wiredep({
-      directory: yeoman.app + '/bower_components',
+      //directory: 'bower_components/',
       ignorePath: '..'
     }))
   .pipe(gulp.dest(yeoman.app + '/views'));
@@ -176,9 +176,9 @@ gulp.task('client:build', ['html', 'styles'], function () {
     .pipe(cssFilter)
     .pipe($.minifyCss({cache: true}))
     .pipe(cssFilter.restore())
-//   .pipe($.rev())
-//   .pipe($.revReplace())
-    .pipe(gulp.dest(yeoman.dist));
+/*    .pipe($.rev())
+    .pipe($.revReplace())
+*/    .pipe(gulp.dest(yeoman.dist));
 });
 
 gulp.task('html', function () {

@@ -27,7 +27,8 @@
     "open": "0.0.5",
     "gulp-sass": "^2.0.4",
     "jshint-stylish": "^1.0.0",
-    "gulp-gh-pages": "~0.5.4"
+    "gulp-gh-pages": "~0.5.4",
+    "grunt": "~1.0.1"
   },
   "engines": {
     "node": ">=0.10.0"
