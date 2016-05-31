@@ -143,15 +143,24 @@ permalink: /404.html
       <p>Sorry, but the page you were trying to view does not exist.</p>
       <p>It looks like this was the result of either:</p>
       <ul>
+        <li> following a link to my old blogger content. The correct link might be: 
+      <a id="blogger-link" href="http://blogger.atheistengineer.com">blogger.atheistengineer.com</a>
+        </li>
         <li>a mistyped address</li>
         <li>an out-of-date link</li>
       </ul>
-      It's possible that you were following a link to my old blogger content. The correct link might be: 
-      <a href="http://blogger.atheistengineer.com">blogger.atheistengineer.com</a>
       <script>
         var GOOG_FIXURL_LANG = (navigator.language || '').slice(0,2),GOOG_FIXURL_SITE = location.host;
       </script>
       <script src="//linkhelp.clients.google.com/tbproxy/lh/wm/fixurl.js"></script>
+      <script type="text/javascript">
+           document.onload=function() {
+               document.getElementById("blogger-link").setAttribute("href", "http://blogger.atheistengineer.com/" + window.location.pathname);
+                   return false;
+               }
+           }
+        </script>
+
     </div>
   </body>
 </html>
