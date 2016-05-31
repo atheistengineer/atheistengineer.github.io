@@ -1,18 +1,20 @@
-<div class="jumbotron">
-  <h1>AtheistEngineer.com</h1>
-  <p class="lead">
+<div class="jumbotron" id="main-header">
+  <h1>Atheist Engineer</h1>
+  <div class="pull-sm-left">
     <img src="images/Atheist Engineer Logo.png" alt="Atheist Engineer Logo"><br>
-    Welcome to AtheistEngineer.com
-  </p>
+    <h2>Welcome to AtheistEngineer.com</h2)
+  </div>
+</div>
+<div class="content">
+<div class="row">
   <p>
   You can contact me at blog@atheistengineer.com or interact with me via 
-  <a href="https://medium.atheistengineer.com"> medium.com</a>,  
+  <a href="https://medium.atheistengineer.com">medium.com</a>,  
   <a href="https://twitter.com/AtheistEngineer/">Twitter</a>, or
   <a href="https://plus.google.com/+AtheistEngineer/posts">Google Plus</a>.
+  
+  Check out my cultivated Twitter lists in the "Twitter" menu. 
   </p>
-</div>
 
-<div class="row marketing">
-    <h1>My Twitter Feed</h1>
-    
+</div>
 </div>
