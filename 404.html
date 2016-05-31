@@ -146,7 +146,7 @@ permalink: /404.html
       
       <p>Sorry, but I moved my blogger content to a subdomain, so content may appear missing.
         Try the link above if you were looking for a blog entry.  Otherwise, please come visit the
-        new <a href="/" onclick="homepage();">Atheist Engineer</a> website.       
+        new <a href="/" onclick="trackOutboundLink('/');">Atheist Engineer</a> website.       
       </p>
 
       <script>
@@ -161,16 +161,16 @@ permalink: /404.html
 
        ga('create', 'UA-60257918-1');
        ga('send', 'pageview');
-	   document.getElementById("blogger-link")
-            .setAttribute("href", "http://blogger.atheistengineer.com" + window.location.pathname)
-            .onclick(function(){
-                ga('send', 'error-page', 'click', 'Clicked redirect option.')
-                return true;
-            })
-       function homepage() {
-                ga('send', 'error-page', 'click', 'Clicked homepage option.')
-                return true;
-       );
+       var trackOutboundLink = function(url) {
+           ga('send', 'event', 'error-outbound', 'click', url, {
+             'transport': 'beacon',
+             'hitCallback': function(){document.location = url;}
+           });
+        }
+        
+	   var link = document.getElementById("blogger-link");
+       link.setAttribute("href", "http://blogger.atheistengineer.com" + window.location.pathname)
+       link.onclick = function() { trackOutboundLink(link.getAttribute('href')) } ;
 
     </script>
 
