@@ -8,7 +8,7 @@
  * Controller of the atheistengineergithubioApp
  */
 angular.module('atheistengineergithubioApp')
-  .controller('HeaderCtrl', function ($scope, $location) {
+  .controller('HeaderCtrl', ['$scope', '$location', function ($scope, $location) {
     this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -18,4 +18,4 @@ angular.module('atheistengineergithubioApp')
         return viewLocation === $location.path();
     };
 
-  });
+  }]);

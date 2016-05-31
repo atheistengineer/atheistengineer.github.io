@@ -22,6 +22,11 @@ body {
   padding: 0;
 }
 
+.dropdown-menu .icon {
+    height: 2em; 
+    margin-right: 1em;
+}
+
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
 .marketing,

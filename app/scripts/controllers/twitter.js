@@ -8,7 +8,7 @@
  * Controller of the atheistengineergithubioApp
  */
 angular.module('atheistengineergithubioApp')
-  .controller('TwitterCtrl', function ($scope, $routeParams) {
+  .controller('TwitterCtrl', ['$scope', '$routeParams', function ($scope, $routeParams) {
     this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -26,16 +26,16 @@ angular.module('atheistengineergithubioApp')
     };
     var this_ref = $routeParams.ref;
     if ($scope.timelines[this_ref] === undefined) {
-        this_ref = 'me';
+        this_ref = 'me';                                                                                                                
     }
     $scope.timeline_id = $scope.timelines[this_ref][1];
 	$scope.isActive = function (ref) { 
         return ref === this_ref;
     };
     
-  });
+  }]);
 
 
-/*
+/*                                                                                                                                                                                                                                                                                                                                                                                                              
 <a class="twitter-timeline" href="https://twitter.com/AtheistEngineer/lists/podcasts" data-widget-id="737409885277683716">Tweets from https://twitter.com/AtheistEngineer/lists/podcasts</a>
 */
