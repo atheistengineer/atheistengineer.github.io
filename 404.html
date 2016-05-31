@@ -146,17 +146,34 @@ permalink: /404.html
       
       <p>Sorry, but I moved my blogger content to a subdomain, so content may appear missing.
         Try the link above if you were looking for a blog entry.  Otherwise, please come visit the
-        new <a href="/">Atheist Engineer</a> website.       
+        new <a href="/" onclick="homepage();">Atheist Engineer</a> website.       
       </p>
 
       <script>
         var GOOG_FIXURL_LANG = (navigator.language || '').slice(0,2),GOOG_FIXURL_SITE = location.host;
       </script>
       <script src="//linkhelp.clients.google.com/tbproxy/lh/wm/fixurl.js"></script>
-      <script type="text/javascript">
-           document.getElementById("blogger-link")
-            .setAttribute("href", "http://blogger.atheistengineer.com" + window.location.pathname);
-      </script>
+	<script>
+       !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
+       (A[l].q=A[l].q||[]).push(arguments)},A[l].l=+new Date,a=n.createElement(g),
+       r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
+       }(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+       ga('create', 'UA-60257918-1');
+       ga('send', 'pageview');
+	   document.getElementById("blogger-link")
+            .setAttribute("href", "http://blogger.atheistengineer.com" + window.location.pathname)
+            .onclick(function(){
+                ga('send', 'error-page', 'click', 'Clicked redirect option.')
+                return true;
+            })
+       function homepage() {
+                ga('send', 'error-page', 'click', 'Clicked homepage option.')
+                return true;
+       );
+
+    </script>
+
 
     </div>
   </body>
