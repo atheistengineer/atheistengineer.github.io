@@ -36,12 +36,16 @@
               <li ng-class="{ active: isActive('/')}"><a href="#/">Home</a></li>
               <li ng-class="{ active: isActive('/twitter')}"><a ng-href="#/twitter">Twitter</a></li>
               <li ng-class="{ active: isActive('/about')}"><a ng-href="#/about">About</a></li>
-              <li><a class="dropdown-toggle" data-toggle="dropdown" href="#">Social Media</a></li>
-	          <ul class="dropdown-menu">
-                 <li style='float:right;'><a ng-href="https://medium.atheistengineer.com/" target="_new">Medium</a></li>
-                 <li style='float:right;'><a ng-href="https://twitter.com/AtheistEngineer" target="_new">Twitter</a></li>
+              <li role="presentation" class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" id="social-dropdown" data-target="#" role="button" 
+                    aria-haspopup="true" aria-expanded="false">
+                    Social Media <span class="caret"></span></a>
 
-              </ul> 
+  	            <ul class="dropdown-menu" role="menu" aria-labelledby="social-dropdown">
+                     <li style='float:right;'><a ng-href="https://medium.atheistengineer.com/" target="_new">Medium</a></li>
+                     <li style='float:right;'><a ng-href="https://twitter.com/AtheistEngineer" target="_new">Twitter</a></li>
+                </ul> 
+              </li>
             </ul>
           </div>
         </div>
