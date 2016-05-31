@@ -201,6 +201,11 @@ gulp.task('copy:favicon', function() {
       .pipe(gulp.dest(yeoman.dist));
 });
 
+gulp.task('copy:404', function() {
+    return gulp.src(yeoman.app + '/404.html')
+      .pipe(gulp.dest(yeoman.dist));
+});
+
 gulp.task('copy:cname', function() {
     return gulp.src(yeoman.app + '/CNAME')
       .pipe(gulp.dest(yeoman.dist ));
@@ -217,7 +222,7 @@ gulp.task('copy:fonts', function () {
 });
 
 gulp.task('build', ['clean:dist'], function () {
-  runSequence(['images', 'copy:extras', 'copy:fonts', 'copy:cname', 'copy:favicon', 'client:build']);
+  runSequence(['images', 'copy:extras', 'copy:fonts', 'copy:cname', 'copy:404', 'copy:favicon', 'client:build']);
 });
 
 gulp.task('default', ['build']);
