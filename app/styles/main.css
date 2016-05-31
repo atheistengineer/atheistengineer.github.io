@@ -8,20 +8,14 @@
   padding: 0.2em 0;
 }
 
-#main-header {
+#twitter-timeline {
+    height:650px;
 }
 
-#main-header::before {
-  content: "";
+#main-header{
+  color: white;
   background-image: url("../images/earth-image.jpeg");
   background-size: cover;
-  opacity: 0.5;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  position: absolute;
-  z-index: -1;   
 }
 
 body {

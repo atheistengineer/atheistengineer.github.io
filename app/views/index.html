@@ -23,7 +23,7 @@
 
     <!-- Add your site or application content here -->
     <div class="header">
-      <div class="navbar navbar-default" role="navigation">
+      <div class="navbar navbar-default" role="navigation" ng-controller="HeaderCtrl">
         <div class="container">
           <div class="navbar-header">
 
@@ -34,17 +34,17 @@
               <span class="icon-bar"></span>
             </button>
 
-            <a class="navbar-brand" href="#/">atheistengineergithubio</a>
+            <a class="navbar-brand" href="#/">Atheist Engineer</a>
           </div>
 
           <div class="collapse navbar-collapse" id="js-navbar-collapse">
 
             <ul class="nav navbar-nav">
-              <li class="active"><a href="#/">Home</a></li>
-              <li><a ng-href="https://medium.atheistengineer.com/" target="_new">Medium</a></li>
-              <li><a ng-href="#/twitter">Twitter</a></li>
-              <li><a ng-href="#/about">About</a></li>
-              <li><a ng-href="#/">Contact</a></li>
+              <li ng-class="{ active: isActive('/')}"><a href="#/">Home</a></li>
+              <li ng-class="{ active: isActive('/twitter')}"><a ng-href="#/twitter">Twitter</a></li>
+              <li ng-class="{ active: isActive('/about')}"><a ng-href="#/about">About</a></li>
+              <ul 
+              <li style='float:right;'><a ng-href="https://medium.atheistengineer.com/" target="_new">Medium</a></li>
             </ul>
           </div>
         </div>
@@ -61,9 +61,7 @@
       </div>
     </div>
 
-
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-     <script>
+    <script>
        !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
        (A[l].q=A[l].q||[]).push(arguments)},A[l].l=+new Date,a=n.createElement(g),
        r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
@@ -92,6 +90,8 @@
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/about.js"></script>
+        <script src="scripts/controllers/twitter.js"></script>
+        <script src="scripts/controllers/header.js"></script>
         <!-- endbuild -->
 </body>
 </html>
