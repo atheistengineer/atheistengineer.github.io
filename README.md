@@ -5,8 +5,19 @@ version 0.15.1.
 
 ## Build & development
 
-Run `grunt` for building and `grunt serve` for preview.
+npm install bower
+bower install
+npm install gulp
+
+To build a release:
+    gulp build
+
+To test internally
+    gulp serve
+
+To deploy to github:
+    gulp deploy
 
 ## Testing
 
-Running `grunt test` will run the unit tests with karma.
+ha ha ha ha ha. No.
