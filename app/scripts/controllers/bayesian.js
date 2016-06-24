@@ -34,57 +34,112 @@
 angular.module('atheistengineergithubioApp')
   .controller('BayesianCtrl', ['$scope', '$routeParams', 'VisDataSet',
   function ($scope, $routeParams, VisDataSet) {
-
     $scope.probabilities = [0, 1, 2, 3, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 93, 98, 99, 100];
 
-    $scope.nodes = new VisDataSet();
-
-    $scope.nodes.add([
-    { "id": 1,
+    var nodes = new VisDataSet([
+    { "id": "1",
       "label": "Jesus is a God",
-
-      "Description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut nec orci ultrices, facilisis leo et, laoreet est. Pellentesque vitae scelerisque tellus. Fusce congue ex vitae aliquam cursus. Sed vitae diam neque. Maecenas consequat elit arcu, sit amet aliquet elit pellentesque nec. Vivamus consequat nunc id urna euismod, sit amet ornare mi bibendum. Morbi pretium scelerisque eros. Quisque quis fringilla lacus.      Vestibulum scelerisque mi tortor, quis varius magna pellentesque ac. Nullam quis auctor mauris. Aliquam aliquet quam ut mi ornare viverra. Maecenas mauris ligula, gravida non nisl ut, fringilla tempor eros. Donec volutpat sed turpis elementum porttitor. Donec iaculis egestas quam quis maximus. Donec rhoncus eu neque eu dignissim. Vestibulum varius vestibulum nunc quis dapibus. Mauris fermentum dui metus, in tincidunt nunc rutrum id. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Integer ut nibh pharetra, aliquam risus a, ultrices massa.",
-      "Probability": 3,
-      "Dependents": {},
-      "Links": [],
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut nec orci ultrices, facilisis leo et.",
+      "probability": 3,
       },
-    { "id": 2,
+    { "id": "2",
       "label": "The Bible says Jesus is a God",
-      "Description": "There's some disagreement about this claim among Bible Scholars, but most seem to think it does",
-      "Probability":  90,
-      "Dependents": {},
-      "Links": [],
+      "description": "There's some disagreement about this claim among Bible Scholars, but most seem to think it does",
+      "probability":  90,
       },
-    { "id": 3,
+    { "id": "3",
       "label": "The Bible is Inerrant",
-      "Description": "A comparison of the Bible with objective evidence about reality shows it is errant.",
-      "Probability":  3,
-      "Dependents": [],
-      "Links": [],
+      "description": "A comparison of the Bible with objective evidence about reality shows it is errant.",
+      "probability":  3,
       }
     ]);
 
-    $scope.edges = new VisDataSet();
-    $scope.edges.add([
+    var edges = new VisDataSet([
       {
-         "to": 1,
-         "from":2,
+         "to": "1",
+         "from":"2",
+         "arrows": "to",
+         "label": "Jesus is a God because The Bible says Jesus is a God",
          "ifTrue": 5,
          "ifFalse": 2,
       },
       {
-         "to": 1,
-         "from":3,
+         "to": "1",
+         "from":"3",
+         "arrows": "to",
+         "label": "Jesus is a God because The Bible is inerrant",
          "ifTrue": 5,
          "ifFalse": 2,
       }
     ]);
-
-    $scope.graphData = {
-      nodes: $scope.nodes,
-      edges: $scope.edges
+    $scope.graph = {
+      nodes: nodes.get(),
+      edges: edges.get()
     };
 
+    nodes.on('*', function() {
+      $scope.graph.nodes = nodes.get();
+      $scope.$apply();
+    })
+    edges.on('*', function() {
+      $scope.graph.edges = edges.get();
+      $scope.$apply();
+    })
+
+
+    $scope.graphOptions = {
+      // interaction: {hover:true}
+    }
+    $scope.graphData = {
+      nodes: nodes,
+      edges: edges
+    };
+
+  $scope.selectedNodes = [];
+  $scope.selectedEdges = [];
+
+  $scope.nodeIsSelected = function (node) {
+    return $scope.selectedNodes.indexOf(node.id.toString()) >= 0;
+  }
+  $scope.edgeIsSelected = function (edge) {
+    return $scope.selectedEdges.indexOf(edge.id.toString()) >= 0;
+  }
+  $scope.supportingNodes = [];
+  $scope.supportedNodes = [];
+  $scope.selectedNodeObjects = [];
+
+  function graphSelect(ev){
+    $scope.selectedNodes = ev.nodes;
+    var nodeints = ev.nodes.map(function(x) { return parseInt(x, 10); });
+    $scope.selectedNodeObjects = $scope.graphData.nodes.get(nodeints);
+
+    $scope.selectedEdges = ev.edges;
+    $scope.selectedEdgeObjects = $scope.graphData.edges.get(ev.edges);
+
+
+    /* Update SupportingNodes */
+    var supporting_edges = $scope.graphData.edges.get({
+      filter: function (item) {
+        return (ev.nodes.indexOf(item.to.toString()) >= 0);
+      }
+    });
+    var from_ids = $.map(supporting_edges, function(e){return e.from});
+    $scope.supportingNodes = $scope.graphData.nodes.get(from_ids);
+
+    /* Update SupportedNodes */
+    var supported_edges = $scope.graphData.edges.get({
+      filter: function (item) {
+        return (ev.nodes.indexOf(item.from.toString()) >= 0);
+      }
+    });
+    var to_ids = $.map(supported_edges, function(e){return e.to});
+    $scope.supportedNodes = $scope.graphData.nodes.get(to_ids);
+
+    $scope.$apply();
+  }
+  $scope.events = {
+    "click": graphSelect,
+    };
   }]);
 
 
