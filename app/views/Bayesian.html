@@ -1,0 +1,14 @@
+<div class="row">
+<h1> Bayesian Analysis Tinkering </h1>
+</div>
+
+<div class="row">
+<div class="col-sm-4">
+    <vis-network style="width:100%;height:200px;border:2px solid blue;" data="graphData" options="graphOptions"></vis-network>
+</div>
+<div class="col-sm-8" id='Heirarchy Browse'>
+    <ul class="nav nav-pills nav-stacked" ng-repeat="val in nodes._data">
+      <li role="presentation"><a>{{val.label}}</a></li>
+    </ul>
+</div>
+</div>

@@ -31,7 +31,8 @@ var paths = {
   ],
   karma: 'karma.conf.js',
   views: {
-    main: yeoman.app + '/index.html',
+    // main: yeoman.app + '/index.html',
+    main: [ yeoman.app + '/index.html' ], // yeoman.app + '/earthcalc/index.html'],
     files: [yeoman.app + '/views/**/*.html']
   }
 };
@@ -149,10 +150,11 @@ gulp.task('test', ['start:server:test'], function () {
 gulp.task('bower', function () {
   return gulp.src(paths.views.main)
     .pipe(wiredep({
-      //directory: 'bower_components/',
+      //  directory: 'bower_components/',
       ignorePath: '..'
     }))
-  .pipe(gulp.dest(yeoman.app + '/views'));
+  .pipe(gulp.dest(yeoman.app))
+  .pipe(gulp.dest(yeoman.app + '/views/'))
 });
 
 ///////////

@@ -16,7 +16,8 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch'
+    'ngTouch',
+    'ngVis'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -34,6 +35,11 @@ angular
         templateUrl: 'views/twitter.html',
         controller: 'TwitterCtrl',
         controllerAs: 'twitter'
+      })
+      .when('/Bayesian', {
+        templateUrl: 'views/Bayesian.html',
+        controller: 'BayesianCtrl',
+        controllerAs: 'bayesian'
       })
       .otherwise({
         redirectTo: '/'

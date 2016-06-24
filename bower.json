@@ -1,6 +1,6 @@
 {
   "name": "atheistengineergithubio",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "dependencies": {
     "angular": "^1.5.6",
     "bootstrap": "^3.3.6",
@@ -13,7 +13,8 @@
     "jquery": "^2.2.4",
     "animate.css": "^3.5.1",
     "font-awesome": "fontawesome#^4.6.3",
-    "ngtweet": "^0.4.0"
+    "ngtweet": "^0.4.0",
+    "angular-visjs": "^4.0.2"
   },
   "devDependencies": {
     "karma": "^0.4.6"
@@ -34,7 +35,9 @@
     "AtheistEngineer <atheistengineer4@gmail.com>"
   ],
   "description": "Atheist Engineer Homepage",
-  "main": "index.html",
+  "main": [
+    "index.html"
+  ],
   "keywords": [
     "Atheism",
     "website"
