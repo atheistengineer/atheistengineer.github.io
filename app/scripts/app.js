@@ -17,7 +17,8 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'ngVis'
+    'ngVis',
+    'xeditable'
   ])
   .config(function ($routeProvider) {
     $routeProvider

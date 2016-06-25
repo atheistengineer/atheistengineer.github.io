@@ -39,17 +39,17 @@ angular.module('atheistengineergithubioApp')
     var nodes = new VisDataSet([
     { "id": "1",
       "label": "Jesus is a God",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut nec orci ultrices, facilisis leo et.",
+      "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut nec orci ultrices, facilisis leo et.",
       "probability": 3,
       },
     { "id": "2",
       "label": "The Bible says Jesus is a God",
-      "description": "There's some disagreement about this claim among Bible Scholars, but most seem to think it does",
+      "desc": "There's some disagreement about this claim among Bible Scholars, but most seem to think it does",
       "probability":  90,
       },
     { "id": "3",
       "label": "The Bible is Inerrant",
-      "description": "A comparison of the Bible with objective evidence about reality shows it is errant.",
+      "desc": "A comparison of the Bible with objective evidence about reality shows it is errant.",
       "probability":  3,
       }
     ]);
@@ -70,7 +70,7 @@ angular.module('atheistengineergithubioApp')
          "label": "Jesus is a God because The Bible is inerrant",
          "ifTrue": 5,
          "ifFalse": 2,
-      }
+    }
     ]);
     $scope.graph = {
       nodes: nodes.get(),
@@ -79,11 +79,11 @@ angular.module('atheistengineergithubioApp')
 
     nodes.on('*', function() {
       $scope.graph.nodes = nodes.get();
-      $scope.$apply();
+      //$scope.$apply();
     })
     edges.on('*', function() {
       $scope.graph.edges = edges.get();
-      $scope.$apply();
+      //$scope.$apply();
     })
 
 
@@ -94,6 +94,10 @@ angular.module('atheistengineergithubioApp')
       nodes: nodes,
       edges: edges
     };
+
+  $scope.updateNode = function(node){
+    $scope.graphData.nodes.update(node);
+  }
 
   $scope.selectedNodes = [];
   $scope.selectedEdges = [];

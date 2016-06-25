@@ -1,6 +1,6 @@
 <div class="row">
 <h1> Graphical Analysis of Philosophy </h1>
-  <p>Though currently just static contant, it's my intention to develop a place where we can develop
+  <p>Though currently just static contant, it's my intention to develop a place where we can build
     and share dynamic graph representaitons or arguments and logical flows.  It's my hope that this
     can help clearly identify points of philosophical disagreement without losing the contextual focus of
     the discussion.
@@ -15,25 +15,20 @@
 
   <div class="panel-body">
     <div class="row">
-     <div class="col-sm-6">
-          <vis-network data="graphData" options="graphOptions" on-click="events" events="events"></vis-network>
-      </div>
-      <div class="col-sm-6" id='Heirarchy Browse'>
-          <ul class="nav nav-pills nav-stacked" ng-repeat="val in graph.nodes">
-            <li role="presentation" ng-class="{active: nodeIsSelected(val) }"><a>{{val.label}} ({{val.probability}}%) {{val.selected}} </a></li>
-          </ul>
-      </div>
-      </div>
+        <vis-network data="graphData" options="graphOptions" on-click="events" events="events"></vis-network>
+    </div>
 
     <div class="panel panel-default">
     <div class="panel-heading">
-      <h2 class="panel-title">Selected Nodes</h2>
+      <h2 class="panel-title">Selected Claim</h2>
     </div>
     <div class="panel-body">
       <div class="row" ng-repeat="node in selectedNodeObjects">
         <div class="col-sm-12">
-          <h3>Node: {{node.label}} </h3>
-          <p>{{node.description}}</p>
+          <h3>Node: <a editable-text="node.label" onbeforesave="graphData.nodes.update({'id': node.id, 'label':$data})">{{node.label}}</a></h3>
+          <a href="#" editable-textarea="node.desc" e-rows="7" e-cols="40">
+            <pre>{{ node.desc || 'no description' }}</pre>
+          </a>
         </div>
       </div>
       <div class="row">
@@ -56,12 +51,12 @@
     </div>
     <div class="panel panel-default">
     <div class="panel-heading">
-      <h2 class="panel-title">Selected Edges</h2>
+      <h2 class="panel-title">Selected Relationships</h2>
     </div>
     <div class="panel-body">
       <div class="row" ng-repeat="edge in selectedEdgeObjects">
         <div class="col-sm-12">
-          <h3>Edge: {{edge.label}} </h3>
+          <h3>Edge: <a editable-text="edge.label" onbeforesave="graphData.edges.update({'id': edge.id, 'label':$data})">{{edge.label || empty}}</a></h3>
           <p>{{edge.description}}</p>
         </div>
       </div>
