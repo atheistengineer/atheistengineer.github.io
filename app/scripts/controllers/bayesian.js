@@ -1,5 +1,5 @@
 'use strict';
-
+/* global $ */ // For jslint.
 /**
  * @ngdoc function
  * @name atheistengineergithubioApp.controller:AboutCtrl
@@ -81,10 +81,10 @@ angular.module('atheistengineergithubioApp')
 
     nodes.on('*', function() {
       $scope.graph.nodes = nodes.get();
-    })
+    });
     edges.on('*', function() {
       $scope.graph.edges = edges.get();
-    })
+    });
 
     $scope.graphOptions = {
       'interaction': {
@@ -94,7 +94,7 @@ angular.module('atheistengineergithubioApp')
       'nodes': {
         'shape': 'box'
       }
-    }
+    };
     $scope.graphData = {
       nodes: nodes,
       edges: edges
@@ -102,7 +102,7 @@ angular.module('atheistengineergithubioApp')
 
   $scope.updateNode = function(node){
     $scope.graphData.nodes.update(node);
-  }
+  };
 
   $scope.selectedNodes = [];
   $scope.selectedEdges = [];
@@ -116,19 +116,21 @@ angular.module('atheistengineergithubioApp')
 
   $scope.search = function(query){
     $location.search(query);
-  }
+  };
 
   /* This function is called when something on the graph is selected. It
    updates the data models in angular to match the data in the graph.
   */
   function graphSelect(ev, noapply){
-    if (ev.nodes === undefined)
+    if (ev.nodes === undefined) {
       ev.nodes = [];
+    }
     $scope.selectedNodes = ev.nodes;
     $scope.selectedNodeObjects = $scope.graphData.nodes.get(ev.nodes);
 
-    if (ev.edges === undefined)
+    if (ev.edges === undefined){
       ev.edges = [];
+    }
     $scope.selectedEdges = ev.edges;
     $scope.selectedEdgeObjects = $scope.graphData.edges.get(ev.edges);
     $location.search({edge:ev.edges, node:ev.nodes});
@@ -145,7 +147,8 @@ angular.module('atheistengineergithubioApp')
           return (ev.nodes.indexOf(item.to.toString()) >= 0);
         }
       });
-      var from_ids = $.map(supporting_edges, function(e){return e.from});
+
+      var from_ids = $.map(supporting_edges, function(e){return e.from;});
       $scope.supportingNodes = $scope.graphData.nodes.get(from_ids);
 
       /* Update SupportedNodes */
@@ -154,51 +157,63 @@ angular.module('atheistengineergithubioApp')
           return (ev.nodes.indexOf(item.from.toString()) >= 0);
         }
       });
-      var to_ids = $.map(supported_edges, function(e){return e.to});
+
+      var to_ids = $.map(supported_edges, function(e){return e.to;});
       $scope.supportedNodes = $scope.graphData.nodes.get(to_ids);
     } else {
       $scope.supportedNodes = [];
       $scope.supportingNodes = [];
     }
 
-    if(noapply != true) $scope.$apply();
+    if(noapply !== true) {
+      $scope.$apply();
+    }
   }
 
   $scope.removeEdge = function(edge){
     $scope.graphData.edges.remove(edge.id);
-    graphSelect({nodes:[], edges:[]}, true)
-  }
+    graphSelect({nodes:[], edges:[]}, true);
+  };
   $scope.removeNode = function(node){
     $scope.graphData.nodes.remove(node.id);
-    graphSelect({nodes:[], edges:[]}, true)
-  }
-  $scope.createNode = function(node)  {
+    var bad_edges = $scope.graphData.edges.get({
+      filter: function (item) {
+        return (item.to === node.id) || (item.from === node.id);
+      }});
+    $scope.graphData.edges.remove(bad_edges);
+    graphSelect({nodes:[], edges:[]}, true);
+  };
+  $scope.createNode = function()  {
     var node_id = $scope.graphData.nodes.add({'label': 'New Node'});
-    $scope.select({node:node_id});
-  }
+    $scope.select({'node':node_id});
+  };
   $scope.createEdge = function(from, to)  {
     var node_id = $scope.graphData.edges.add({'arrows': 'to', 'from': from.id, 'to': to.id});
     $scope.showEdgeTarget=false;
-  }
+    return node_id;
+  };
 
-  $scope.showEdgeTarget=false;
+  $scope.showEdgeTarget = false;
   $scope.toggleEdgeTarget = function() {
     $scope.showEdgeTarget = !$scope.showEdgeTarget;
-  }
-  $scope.showEdgeFrom=false;
+  };
+  $scope.showEdgeFrom = false;
   $scope.toggleEdgeFrom = function() {
     $scope.showEdgeFrom = !$scope.showEdgeFrom;
-  }
+  };
 
 
   $scope.select = function(qry){
-    if ((qry.edge === undefined) && (qry.node !== undefined))
+    if ((qry.edge === undefined) && (qry.node !== undefined)){
       graphSelect({'nodes': [qry.node], 'edges':[]}, true);
-    else if ((qry.edge !== undefined) && (qry.node === undefined))
+    }
+    else if ((qry.edge !== undefined) && (qry.node === undefined)){
       graphSelect({'nodes': [], 'edges':[qry.edge]}, true);
-    else
-      console.log('Illlegal selection call. Only node or edge may be defined.', qry)
-  }
+    }
+    else{
+      console.log('Illlegal selection call. Only node or edge may be defined.', qry);
+    }
+  };
 
   $scope.events = {
     "click": graphSelect,

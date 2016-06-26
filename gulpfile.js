@@ -9,6 +9,7 @@ var rimraf = require('rimraf');
 var wiredep = require('wiredep').stream;
 var runSequence = require('run-sequence');
 var deploy      = require('gulp-gh-pages');
+var flatten = require('gulp-flatten');
 
 var yeoman = {
   app: require('./bower.json').appPath || 'app',
@@ -63,7 +64,7 @@ gulp.task('deploy', function () {
   return gulp.src("./dist/**/*")
     .pipe(deploy({'branch':'master'}))
 });
-// Alias because I keep forgetting the name.  
+// Alias because I keep forgetting the name.
 gulp.task('publish', ['deploy'])
 
 
@@ -148,6 +149,12 @@ gulp.task('test', ['start:server:test'], function () {
     }));
 });
 
+gulp.task('dist:bower:fonts', function() {
+  return gulp.src('./bower_components/**/*.{eot,svg,ttf,woff,woff2}')
+    .pipe(flatten())
+    .pipe(gulp.dest(yeoman.dist + '/fonts/'))
+});
+
 // inject bower components
 gulp.task('bower', function () {
   return gulp.src(paths.views.main)
@@ -220,7 +227,7 @@ gulp.task('copy:extras', function () {
     .pipe(gulp.dest(yeoman.dist));
 });
 
-gulp.task('copy:fonts', function () {
+gulp.task('copy:fonts', ['dist:bower:fonts'], function () {
   return gulp.src(yeoman.app + '/fonts/**/*')
     .pipe(gulp.dest(yeoman.dist + '/fonts'));
 });
