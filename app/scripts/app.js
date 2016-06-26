@@ -18,7 +18,8 @@ angular
     'ngSanitize',
     'ngTouch',
     'ngVis',
-    'xeditable'
+    'ui.bootstrap',
+    'xeditable',
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -40,9 +41,12 @@ angular
       .when('/Bayesian', {
         templateUrl: 'views/Bayesian.html',
         controller: 'BayesianCtrl',
-        controllerAs: 'bayesian'
+        controllerAs: 'bayesian',
+        reloadOnSearch: false
       })
       .otherwise({
         redirectTo: '/'
       });
-  });
+  }).run(function(editableOptions) {
+  editableOptions.theme = 'bs3';
+});

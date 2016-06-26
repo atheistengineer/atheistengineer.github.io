@@ -9,59 +9,20 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">
+    <button class="btn btn-default btn-xs pull-right" ng-click="createNode()"><span class="glyphicon glyphicon-plus"></span></button>
     <h2 class="panel-title">Graph Analysis of xyz</h2>
   </div>
-
 
   <div class="panel-body">
     <div class="row">
         <vis-network data="graphData" options="graphOptions" on-click="events" events="events"></vis-network>
     </div>
 
-    <div class="panel panel-default">
-    <div class="panel-heading">
-      <h2 class="panel-title">Selected Claim</h2>
-    </div>
-    <div class="panel-body">
-      <div class="row" ng-repeat="node in selectedNodeObjects">
-        <div class="col-sm-12">
-          <h3>Node: <a editable-text="node.label" onbeforesave="graphData.nodes.update({'id': node.id, 'label':$data})">{{node.label}}</a></h3>
-          <a href="#" editable-textarea="node.desc" e-rows="7" e-cols="40">
-            <pre>{{ node.desc || 'no description' }}</pre>
-          </a>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-6">
-          <h3>Because ...</h3>
-          <ul ng-repeat="sup in supportingNodes">
-            <li>{{sup.label}} ({{ sup.probability }}%)</li>
-          </ul>
+    <ng-include src="'views/partials/bayesian-node.html'"></ng-include>
+    <ng-include src="'views/partials/bayesian-edge.html'"></ng-include>
 
-        </div>
-        <div class="col-sm-6">
-          <h3>Therefore ...</h3>
-          <ul ng-repeat="sup in supportedNodes">
-            <li>{{sup.label}} ({{ sup.probability }}%)</li>
-          </ul>
-
-        </div>
-      </div>
-      </div>
-    </div>
-    <div class="panel panel-default">
-    <div class="panel-heading">
-      <h2 class="panel-title">Selected Relationships</h2>
-    </div>
-    <div class="panel-body">
-      <div class="row" ng-repeat="edge in selectedEdgeObjects">
-        <div class="col-sm-12">
-          <h3>Edge: <a editable-text="edge.label" onbeforesave="graphData.edges.update({'id': edge.id, 'label':$data})">{{edge.label || empty}}</a></h3>
-          <p>{{edge.description}}</p>
-        </div>
-      </div>
-    </div>
   </div>
+</div>
 
 <div class="row" ng-show="false">
   <pre>
