@@ -63,6 +63,8 @@ gulp.task('deploy', function () {
   return gulp.src("./dist/**/*")
     .pipe(deploy({'branch':'master'}))
 });
+// Alias because I keep forgetting the name.  
+gulp.task('publish', ['deploy'])
 
 
 gulp.task('styles', function () {
