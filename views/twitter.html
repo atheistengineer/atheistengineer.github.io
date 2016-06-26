@@ -1,0 +1,15 @@
+<div class="row">
+<h1> Cultivated Tweets</h1>
+</div>
+
+<div class="row">
+<div class="col-sm-4">
+    <ul class="nav nav-pills nav-stacked" ng-repeat="(key,val) in timelines">
+        <li role="presentation"><a ng-href="#twitter?ref={{key}}">{{val[0]}}</a></li>
+    </ul>
+</div>
+<div class="col-sm-8" id='twitter-timeline'>
+    <twitter-timeline twitter-timeline-id="timeline_id">
+    </twitter-timeline>
+</div>
+</div>
