@@ -1,0 +1,38 @@
+{
+  "name": "Jesus is God",
+  "owner": "AtheistEngineer",
+  "created": "2016-06-26 08:00Z",
+
+  "nodes": [
+  { "id": "1",
+    "label": "Jesus is a God",
+    "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut nec orci ultrices, facilisis leo et.",
+    "probability": 3
+    },
+  { "id": "2",
+    "label": "The Bible says Jesus is a God",
+    "desc": "There's some disagreement about this claim among Bible Scholars, but most seem to think it does",
+    "probability":  90
+    },
+  { "id": "3",
+    "label": "The Bible is Inerrant",
+    "desc": "A comparison of the Bible with objective evidence about reality shows it is errant.",
+    "probability":  3
+    }
+  ],
+  "edges": [
+    {
+       "to": "1",
+       "from":"2",
+       "arrows": "to",
+       "ifTrue": 5,
+       "ifFalse": 2
+    },
+    {
+       "to": "1",
+       "from":"3",
+       "arrows": "to",
+       "ifTrue": 5,
+       "ifFalse": 2
+  }
+  ]}
