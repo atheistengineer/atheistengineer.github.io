@@ -32,48 +32,17 @@
  2-element truth table on the edge?
  */
 angular.module('atheistengineergithubioApp')
-  .controller('BayesianCtrl', ['$scope', '$routeParams', '$location', 'VisDataSet',
-  function ($scope, $routeParams, $location, VisDataSet) {
+  .controller('BayesianCtrl', ['$scope', '$routeParams', '$location', 'VisDataSet', 'BayesModel',
+  function ($scope, $routeParams, $location, VisDataSet, BayesModel) {
     $scope.probabilities = [0, 1, 2, 3, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 93, 98, 99, 100];
+    var nodes = new VisDataSet();
+    var edges = new VisDataSet();
 
+    var model = BayesModel.get({"slug": $routeParams.slug}, function(res){
+      nodes.add(res.nodes);
+      edges.add(res.edges);
+    });
 
-    var data = {
-    'nodes': [
-    { "id": "1",
-      "label": "Jesus is a God",
-      "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut nec orci ultrices, facilisis leo et.",
-      "probability": 3,
-      },
-    { "id": "2",
-      "label": "The Bible says Jesus is a God",
-      "desc": "There's some disagreement about this claim among Bible Scholars, but most seem to think it does",
-      "probability":  90,
-      },
-    { "id": "3",
-      "label": "The Bible is Inerrant",
-      "desc": "A comparison of the Bible with objective evidence about reality shows it is errant.",
-      "probability":  3,
-      }
-    ],
-    'edges': [
-      {
-         "to": "1",
-         "from":"2",
-         "arrows": "to",
-         "ifTrue": 5,
-         "ifFalse": 2,
-      },
-      {
-         "to": "1",
-         "from":"3",
-         "arrows": "to",
-         "ifTrue": 5,
-         "ifFalse": 2,
-    }
-    ]};
-
-    var nodes = new VisDataSet(data.nodes);
-    var edges = new VisDataSet(data.edges);
     $scope.graph = {
       nodes: nodes.get(),
       edges: edges.get()
