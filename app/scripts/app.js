@@ -38,7 +38,7 @@ angular
         controller: 'TwitterCtrl',
         controllerAs: 'twitter'
       })
-      .when('/Bayesian', {
+      .when('/Bayesian/:slug', {
         templateUrl: 'views/Bayesian.html',
         controller: 'BayesianCtrl',
         controllerAs: 'bayesian',
