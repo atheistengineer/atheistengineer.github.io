@@ -17,6 +17,19 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
+
+    <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyBL9UCwkTeWzbPazNed-bkPQpx1_imxz84",
+        authDomain: "graphical-reasoner.firebaseapp.com",
+        databaseURL: "https://graphical-reasoner.firebaseio.com",
+        storageBucket: "graphical-reasoner.appspot.com",
+      };
+      firebase.initializeApp(config);
+    </script>
+
   </head>
   <body ng-app="atheistengineergithubioApp">
     <!--[if lte IE 8]>

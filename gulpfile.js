@@ -212,6 +212,11 @@ gulp.task('copy:favicon', function() {
       .pipe(gulp.dest(yeoman.dist));
 });
 
+gulp.task('copy:json', function() {
+    return gulp.src(yeoman.app + '/bayes_models/*.json')
+      .pipe(gulp.dest(yeoman.dist + '/bayes_models/'));
+});
+
 gulp.task('copy:404', function() {
     return gulp.src(yeoman.app + '/404.html')
       .pipe(gulp.dest(yeoman.dist));
@@ -233,7 +238,7 @@ gulp.task('copy:fonts', ['dist:bower:fonts'], function () {
 });
 
 gulp.task('build', ['clean:dist'], function () {
-  runSequence(['images', 'copy:extras', 'copy:fonts', 'copy:cname', 'copy:404', 'copy:favicon', 'client:build']);
+  runSequence(['images', 'copy:extras', 'copy:json', 'copy:fonts', 'copy:cname', 'copy:404', 'copy:favicon', 'client:build']);
 });
 
 gulp.task('default', ['build']);

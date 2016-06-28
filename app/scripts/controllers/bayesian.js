@@ -38,14 +38,19 @@ angular.module('atheistengineergithubioApp')
     var nodes = new VisDataSet();
     var edges = new VisDataSet();
 
-    var model = BayesModel.get({"slug": $routeParams.slug}, function(res){
-      nodes.add(res.nodes);
-      edges.add(res.edges);
-    });
+    if ($routeParams.slug !== undefined) {
+      var model = BayesModel.get({"slug": $routeParams.slug}, function(res){
+        $scope.graph.name=res.name;
+        nodes.add(res.nodes);
+        edges.add(res.edges);
+      });
+    }
 
     $scope.graph = {
-      nodes: nodes.get(),
-      edges: edges.get()
+      "name": "empty",
+      "owner": "You",
+      "nodes": nodes.get(),
+      "edges": edges.get()
     };
 
     nodes.on('*', function() {

@@ -10,7 +10,7 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <button class="btn btn-default btn-xs pull-right" ng-click="createNode()"><span class="glyphicon glyphicon-plus"></span></button>
-    <h2 class="panel-title">Graph Analysis of xyz</h2>
+    <h2 class="panel-title">Graph Analysis of <span editable-text="graph.name">{{graph.name || "empty" }}</span></h2>
   </div>
 
   <div class="panel-body">

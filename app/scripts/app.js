@@ -38,6 +38,12 @@ angular
         controller: 'TwitterCtrl',
         controllerAs: 'twitter'
       })
+      .when('/Bayesian', {
+        templateUrl: 'views/Bayesian.html',
+        controller: 'BayesianCtrl',
+        controllerAs: 'bayesian',
+        reloadOnSearch: false
+      })
       .when('/Bayesian/:slug', {
         templateUrl: 'views/Bayesian.html',
         controller: 'BayesianCtrl',
