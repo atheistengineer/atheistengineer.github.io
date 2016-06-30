@@ -5,6 +5,9 @@
     <title>Atheist Engineer</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
+
+    <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
@@ -17,18 +20,6 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
-
-    <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
-    <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyBL9UCwkTeWzbPazNed-bkPQpx1_imxz84",
-        authDomain: "graphical-reasoner.firebaseapp.com",
-        databaseURL: "https://graphical-reasoner.firebaseio.com",
-        storageBucket: "graphical-reasoner.appspot.com",
-      };
-      firebase.initializeApp(config);
-    </script>
 
   </head>
   <body ng-app="atheistengineergithubioApp">
@@ -120,6 +111,8 @@
     <script src="/bower_components/angular-xeditable/dist/js/xeditable.js"></script>
     <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="/bower_components/firebase/firebase.js"></script>
+    <script src="/bower_components/angularfire/dist/angularfire.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 

@@ -8,6 +8,14 @@
  *
  * Main module of the application.
  */
+var config = {
+  apiKey: "AIzaSyBL9UCwkTeWzbPazNed-bkPQpx1_imxz84",
+  authDomain: "graphical-reasoner.firebaseapp.com",
+  databaseURL: "https://graphical-reasoner.firebaseio.com",
+  storageBucket: "graphical-reasoner.appspot.com",
+};
+firebase.initializeApp(config);
+
 angular
   .module('atheistengineergithubioApp', [
     'ngAnimate',
@@ -20,6 +28,7 @@ angular
     'ngVis',
     'ui.bootstrap',
     'xeditable',
+    'firebase'
   ])
   .config(function ($routeProvider) {
     $routeProvider

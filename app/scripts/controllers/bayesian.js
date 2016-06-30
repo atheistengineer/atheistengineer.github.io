@@ -32,8 +32,9 @@
  2-element truth table on the edge?
  */
 angular.module('atheistengineergithubioApp')
-  .controller('BayesianCtrl', ['$scope', '$routeParams', '$location', 'VisDataSet', 'BayesModel',
-  function ($scope, $routeParams, $location, VisDataSet, BayesModel) {
+  .controller('BayesianCtrl', ['$scope', '$routeParams', '$location', '$firebaseArray', '$firebaseObject', '$firebaseAuth',
+  'VisDataSet', 'BayesModel', 'Firebase',
+  function ($scope, $routeParams, $location, $firebaseArray, $firebaseObject, $firebaseAuth, VisDataSet, BayesModel, Firebase) {
     $scope.probabilities = [0, 1, 2, 3, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 93, 98, 99, 100];
     var nodes = new VisDataSet();
     var edges = new VisDataSet();
@@ -46,12 +47,23 @@ angular.module('atheistengineergithubioApp')
       });
     }
 
-    $scope.graph = {
-      "name": "empty",
-      "owner": "You",
-      "nodes": nodes.get(),
-      "edges": edges.get()
-    };
+//    $scope.graph = {
+//      "name": "empty",
+//      "owner": "You",
+//      "nodes": nodes.get(),
+//      "edges": edges.get()
+//    };
+  // From https://github.com/firebase/angularfire/blob/master/docs/quickstart.md
+  var ref = firebase.database().ref();
+  var array = $firebaseArray(ref);
+    // download the data into a local object
+  var graph = $firebaseObject(ref);
+  var auth = $firebaseAuth();
+  // putting a console.log here won't work, see below
+
+  // synchronize the object with a three-way data binding
+  // click on `index.html` above to see it used in the DOM!
+  graph.$bindTo($scope, "graph");
 
     nodes.on('*', function() {
       $scope.graph.nodes = nodes.get();
@@ -129,7 +141,7 @@ angular.module('atheistengineergithubioApp')
       var supported_edges = $scope.graphData.edges.get({
         filter: function (item) {
           return (ev.nodes.indexOf(item.from.toString()) >= 0);
-        }
+        }-a
       });
 
       var to_ids = $.map(supported_edges, function(e){return e.to;});
@@ -192,7 +204,16 @@ angular.module('atheistengineergithubioApp')
   $scope.events = {
     "click": graphSelect,
     };
-  }]);
+    // login with Facebook
+  var twitter = new firebase.auth.TwitterAuthProvider();
+  auth.$signInWithPopup(twitter).then(function(firebaseUser) {
+    console.log("Signed in as:", firebaseUser.uid);
+  }).catch(function(error) {
+    console.log("Authentication failed:", error);
+  });
+
+}]);
+
 
 
 /*
