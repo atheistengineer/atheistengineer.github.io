@@ -47,17 +47,35 @@ angular
         controller: 'TwitterCtrl',
         controllerAs: 'twitter'
       })
-      .when('/Bayesian', {
-        templateUrl: 'views/Bayesian.html',
-        controller: 'BayesianCtrl',
-        controllerAs: 'bayesian',
-        reloadOnSearch: false
+      .when('/reason', {
+        templateUrl: 'views/reason.html',
+        controller: 'ReasonCtrl',
+        controllerAs: 'reason',
+        reloadOnSearch: false,
+        resolve: {
+          // controller will not be loaded until $requireSignIn resolves
+          // Auth refers to our $firebaseAuth wrapper in the example above
+          "currentAuth": ["Auth", function(Auth) {
+            // $requireSignIn returns a promise so the resolve waits for it to complete
+            // If the promise is rejected, it will throw a $stateChangeError (see above)
+            return Auth.$requireSignIn();
+          }]
+        }
       })
-      .when('/Bayesian/:slug', {
-        templateUrl: 'views/Bayesian.html',
-        controller: 'BayesianCtrl',
-        controllerAs: 'bayesian',
-        reloadOnSearch: false
+      .when('/reason/:slug', {
+        templateUrl: 'views/reason.html',
+        controller: 'ReasonCtrl',
+        controllerAs: 'reason',
+        reloadOnSearch: false,
+        resolve: {
+          // controller will not be loaded until $requireSignIn resolves
+          // Auth refers to our $firebaseAuth wrapper in the example above
+          "currentAuth": ["Auth", function(Auth) {
+            // $requireSignIn returns a promise so the resolve waits for it to complete
+            // If the promise is rejected, it will throw a $stateChangeError (see above)
+            return Auth.$requireSignIn();
+          }]
+        }
       })
       .otherwise({
         redirectTo: '/'
