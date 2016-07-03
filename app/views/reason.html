@@ -27,7 +27,8 @@
     <button class="btn btn-default btn-xs pull-right"
             title="Add node" ng-click="createNode()"><span class="glyphicon glyphicon-plus"></span></button>
     <span class="pull-right">By {{graph.owner || "No Owner"}}</span>
-    <h2 class="panel-title">Graph Analysis of <span editable-text="graph.name">{{graph.name || "empty" }}</span></h2>
+    <h2 class="panel-title">Reasoning for <span editable-text="graph.name"
+        onbeforesave="setSlug($data);">{{graph.name || "empty" }}</span></h2>
   </div>
 
   <div class="panel-body" ng-show="graph !== undefined">
