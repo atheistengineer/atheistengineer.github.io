@@ -58,22 +58,8 @@ angular
           "currentAuth": ["Auth", function(Auth) {
             // $requireSignIn returns a promise so the resolve waits for it to complete
             // If the promise is rejected, it will throw a $stateChangeError (see above)
-            return Auth.$requireSignIn();
-          }]
-        }
-      })
-      .when('/reason/:slug', {
-        templateUrl: 'views/reason.html',
-        controller: 'ReasonCtrl',
-        controllerAs: 'reason',
-        reloadOnSearch: false,
-        resolve: {
-          // controller will not be loaded until $requireSignIn resolves
-          // Auth refers to our $firebaseAuth wrapper in the example above
-          "currentAuth": ["Auth", function(Auth) {
-            // $requireSignIn returns a promise so the resolve waits for it to complete
-            // If the promise is rejected, it will throw a $stateChangeError (see above)
-            return Auth.$requireSignIn();
+            // return Auth.$requireSignIn();
+            return Auth.$waitForSignIn();
           }]
         }
       })

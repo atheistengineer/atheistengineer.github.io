@@ -15,6 +15,9 @@ angular.module('atheistengineergithubioApp')
 .factory("FUser", ["$firebaseObject",
   function($firebaseObject) {
     return function(user) {
+      if (user === null) {
+        return null;
+      }
       // create a reference to the database where we will store our data
       //var randomId = Math.round(Math.random() * 100000000);
       var ref = firebase.database().ref().child("users");

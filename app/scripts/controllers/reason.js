@@ -55,7 +55,7 @@ function ($scope, $routeParams, $location, $firebaseArray,
   $scope.graph = {};
   // Some day this could be more sophistocated.
   $scope.graphEditable = function(uid){
-    return ($scope.auth.$getAuth().uid === $scope.graph.owner);
+    return $scope.auth.$getAuth() && ($scope.auth.$getAuth().uid === $scope.graph.owner);
   }
 
 
