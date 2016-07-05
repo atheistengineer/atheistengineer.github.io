@@ -39,49 +39,49 @@ function ($scope, $routeParams, $location, $firebaseArray,
 
   $scope.auth = Auth;
   $scope.firebaseUser =  {}
-  // From https://github.com/firebase/angularfire/blob/master/docs/quickstart.md
-  var ref = firebase.database().ref();
-  // var array = $firebaseArray(ref);
-    // download the data into a local object
-  //var graph = $firebaseObject(ref.child("claims").child('single-claim'));
 
-  if ($routeParams.slug !== undefined) {
-    var slug = slugify($routeParams.slug);
+  if ($location.search().reason !== undefined) {
+    var title = $location.search().reason;
   } else {
-    var slug = '';
+    var title = '';
   }
-
-  var graph = Reason(slug, $scope.auth.uid)
-  $scope.graph = {
-    'owner': $scope.auth.uid
-  };
-
-  // synchronize the object with a three-way data binding
-  // click on `index.html` above to see it used in the DOM!
-  graph.$bindTo($scope, "graph");
-
-  // any time auth state changes, add the user data to scope
-  $scope.auth.$onAuthStateChanged(function(firebaseUser) {
-    console.log("User Auth State Changed", firebaseUser);
-    if (firebaseUser !== null) {
-      if ($scope.graph.owner === undefined) {
-        console.log('Updated graph owner')
-        graph.owner = firebaseUser.uid;
-        graph.$save();
-      }
-    }
-    $scope.firebaseUser = firebaseUser;
-  });
 
   var nodes = new VisDataSet();
   var edges = new VisDataSet();
 
-  // When nodes or edges change, update $scope.graph appropriately.
-  nodes.on('*', function() {
-    $scope.graph.nodes = nodes.get();
+  $scope.graph = {};
+
+  var graph = Reason(title, $scope.auth.uid)
+  graph.then(function(val){
+    $scope.graph = val;
+    val.$bindTo($scope, "graph");
+    val.$loaded().then(function(v){
+      if (v.nodes !== undefined) {
+        nodes.add(v.nodes);
+      }
+      if (v.edges !== undefined) {
+        edges.add(val.edges);
+      }
+    })
+
+    // When nodes or edges change, update $scope.graph appropriately.
+    nodes.on('*', function() {
+      $scope.graph.nodes = nodes.get();
+    });
+    edges.on('*', function() {
+      $scope.graph.edges = edges.get();
+    });
+
+    $scope.graphData = {
+      nodes: nodes,
+      edges: edges
+    };
+
   });
-  edges.on('*', function() {
-    $scope.graph.edges = edges.get();
+
+  // any time auth state changes, add the user data to scope
+  $scope.auth.$onAuthStateChanged(function(firebaseUser) {
+    $scope.firebaseUser = firebaseUser;
   });
 
   $scope.graphOptions = {
@@ -93,10 +93,6 @@ function ($scope, $routeParams, $location, $firebaseArray,
       'shape': 'box'
     }
   };
-  $scope.graphData = {
-    nodes: nodes,
-    edges: edges
-  };
 
   $scope.setSlug = function (name) {
     // For some reason, setting $scope.graph.xxx works here, but we have to
@@ -107,6 +103,7 @@ function ($scope, $routeParams, $location, $firebaseArray,
       .replace(/\-\-+/g, '-')         // Replace multiple - with single -
       .replace(/^-+/, '')             // Trim - from start of text
       .replace(/-+$/, '');            // Trim - from end of text
+    $location.search({'reason': $scope.graph.name})
   };
 
   $scope.updateNode = function(node){
@@ -124,7 +121,10 @@ function ($scope, $routeParams, $location, $firebaseArray,
   $scope.supportedNode = [];
 
   $scope.search = function(query){
-    $location.search(query);
+    q2 = $location.search();
+    q2.nodes = query.nodes;
+    q2.edges = query.edges;
+    $location.search(q2);
   };
 
 
@@ -144,7 +144,7 @@ function ($scope, $routeParams, $location, $firebaseArray,
     $scope.selectedEdges = ev.edges;
     $scope.selectedEdgeObjects = $scope.graphData.edges.get(ev.edges);
 
-    $location.search({edge:ev.edges, node:ev.nodes});
+    $location.search({name:$scope.graph.name, edge:ev.edges, node:ev.nodes});
 
     if (ev.edges.length > 0){
         $scope.supportedNode = $scope.graphData.nodes.get(ev.edges[0].to);

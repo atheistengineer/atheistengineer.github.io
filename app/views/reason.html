@@ -8,7 +8,7 @@
         </div>
         <div ng-hide="firebaseUser">
           Do I know you?
-          <button class="btn btn-default btn-xs pull-right" ng-click="firebaseUser.$signInWithPopup('twitter')"  title=""Sign In"><span class="glyphicon glyphicon-log-out"></span></button>
+          <button class="btn btn-default btn-xs pull-right" ng-click="firebaseUser.$signInWithPopup('twitter')"  title=""Sign In"><span class="glyphicon glyphicon-log-in"></span></button>
         </div>
       </div>
       <h2 class="panel-title"> Graphical Claims </h2>
@@ -28,7 +28,7 @@
             title="Add node" ng-click="createNode()"><span class="glyphicon glyphicon-plus"></span></button>
     <span class="pull-right">By {{graph.owner || "No Owner"}}</span>
     <h2 class="panel-title">Reasoning for <span editable-text="graph.name"
-        onbeforesave="setSlug($data);">{{graph.name || "empty" }}</span></h2>
+        onbeforesave="setSlug($data);">{{graph.name || "empty" }}</span>{{graph.key}}</h2>
   </div>
 
   <div class="panel-body" ng-show="graph !== undefined">
@@ -42,9 +42,10 @@
   </div>
 </div>
 
-<div class="row" ng-show="false">
+<div class="row" ng-show="true">
   <pre>
-    {{graph.nodes | json}}
+    {{graph | json}}
     {{selectedNodeObjects}}
   </pre>
+  ownerProfile = {{ graph.owner }}, {{ graph.getOwnerProfile() }}
 </div>
