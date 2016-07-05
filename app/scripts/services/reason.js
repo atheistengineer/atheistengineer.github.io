@@ -27,11 +27,14 @@ angular.module('atheistengineergithubioApp')
         defer.resolve($firebaseObject(owner));
       });
       return defer.promise;
+    },
+    isEditable: function() {
+      return this.owner === firebase.auth().currentUser.uid;
     }
   });
 }])
-.factory("Reason", ["ReasonFactory", "$firebaseObject", "$q",
-  function(ReasonFactory, $firebaseObject, $q) {
+.factory("Reason", ["ReasonFactory", "$q",
+  function(ReasonFactory, $q) {
     return function(name) {
       var slug = slugify(name);
       // Get a reference to the "reasons" list.

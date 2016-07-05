@@ -42,10 +42,13 @@
   </div>
 </div>
 
-<div class="row" ng-show="true">
+<div class="row" ng-show="false">
   <pre>
     {{graph | json}}
     {{selectedNodeObjects}}
   </pre>
   ownerProfile = {{ graph.owner }}, {{ graph.getOwnerProfile() }}
+  <br>
+  Graph Editable: {{ graphEditable() }} / {{ graph.isEditable() }}
+
 </div>

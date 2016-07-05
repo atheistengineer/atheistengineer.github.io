@@ -40,44 +40,70 @@ function ($scope, $routeParams, $location, $firebaseArray,
   $scope.auth = Auth;
   $scope.firebaseUser =  {}
 
-  if ($location.search().reason !== undefined) {
-    var title = $location.search().reason;
-  } else {
-    var title = '';
+  if ($location.search().name !== undefined) {
+    var name = $location.search().name;
+    init_graph(name);
   }
 
   var nodes = new VisDataSet();
   var edges = new VisDataSet();
+  $scope.graphData = {
+    nodes: nodes,
+    edges: edges
+  };
 
   $scope.graph = {};
+  // Some day this could be more sophistocated.
+  $scope.graphEditable = function(uid){
+    return ($scope.auth.$getAuth().uid === $scope.graph.owner);
+  }
 
-  var graph = Reason(title, $scope.auth.uid)
-  graph.then(function(val){
-    $scope.graph = val;
-    val.$bindTo($scope, "graph");
-    val.$loaded().then(function(v){
-      if (v.nodes !== undefined) {
-        nodes.add(v.nodes);
-      }
-      if (v.edges !== undefined) {
-        edges.add(val.edges);
-      }
-    })
 
-    // When nodes or edges change, update $scope.graph appropriately.
-    nodes.on('*', function() {
-      $scope.graph.nodes = nodes.get();
+  function init_graph(name){
+    var graph = Reason(name, $scope.auth.uid)
+    graph.then(function(val){
+      $scope.graph = val;
+      val.$bindTo($scope, "graph");
+      val.$loaded().then(function(v){
+        if (v.nodes !== undefined) {
+          nodes.add(v.nodes);
+        }
+        if (v.edges !== undefined) {
+          edges.add(val.edges);
+        }
+      })
+
+      // When nodes or edges change, update $scope.graph appropriately.
+      nodes.on('*', function() {
+        $scope.graph.nodes = nodes.get();
+      });
+      edges.on('*', function() {
+        $scope.graph.edges = edges.get();
+      });
+
     });
-    edges.on('*', function() {
-      $scope.graph.edges = edges.get();
-    });
+    return graph;
+  }
 
-    $scope.graphData = {
-      nodes: nodes,
-      edges: edges
-    };
+  // This function initializes the title & slug and starts saving the graph.
+  $scope.setSlug = function (name) {
+    if (!$scope.graph.slug && !$scope.graph.name) {
+      init_graph(name);
+    }
 
-  });
+    // For some reason, setting $scope.graph.xxx works here, but we have to
+    // set graph.xxx other places. graph.xxx doesn't seem to work here.
+    $scope.graph.slug = name.toString().toLowerCase()
+      .replace(/\s+/g, '-')           // Replace spaces with -
+      .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+      .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+      .replace(/^-+/, '')             // Trim - from start of text
+      .replace(/-+$/, '');            // Trim - from end of text
+
+    $location.search({'reason': $scope.graph.name})
+  };
+
+
 
   // any time auth state changes, add the user data to scope
   $scope.auth.$onAuthStateChanged(function(firebaseUser) {
@@ -92,22 +118,6 @@ function ($scope, $routeParams, $location, $firebaseArray,
     'nodes': {
       'shape': 'box'
     }
-  };
-
-  $scope.setSlug = function (name) {
-    // For some reason, setting $scope.graph.xxx works here, but we have to
-    // set graph.xxx other places. graph.xxx doesn't seem to work here.
-    $scope.graph.slug = name.toString().toLowerCase()
-      .replace(/\s+/g, '-')           // Replace spaces with -
-      .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
-      .replace(/\-\-+/g, '-')         // Replace multiple - with single -
-      .replace(/^-+/, '')             // Trim - from start of text
-      .replace(/-+$/, '');            // Trim - from end of text
-    $location.search({'reason': $scope.graph.name})
-  };
-
-  $scope.updateNode = function(node){
-    $scope.graphData.nodes.update(node);
   };
 
   $scope.selectedNodes = [];
@@ -126,7 +136,6 @@ function ($scope, $routeParams, $location, $firebaseArray,
     q2.edges = query.edges;
     $location.search(q2);
   };
-
 
   /* This function is called when something on the graph is selected. It
    updates the data models in angular to match the data in the graph.
@@ -232,40 +241,6 @@ function ($scope, $routeParams, $location, $firebaseArray,
   $scope.events = {
     "click": graphSelect,
     };
-    // login with Facebook
-/* var twitter = new firebase.auth.TwitterAuthProvider();
-  auth.$signInWithPopup(twitter).then(function(firebaseUser) {
-    console.log("Signed in as:", firebaseUser.uid);
-  }).catch(function(error) {
-    console.log("Authentication failed:", error);
-  });
-
-    $scope.createUser = function() {
-      $scope.message = null;
-      $scope.error = null;
-
-      // Create a new user
-      Auth.$createUser()
-        .then(function(firebaseUser) {
-          $scope.message = "User created with uid: " + firebaseUser.uid;
-        }).catch(function(error) {
-          $scope.error = error;
-        });
-    };
-
-    $scope.deleteUser = function() {
-      $scope.message = null;
-      $scope.error = null;
-
-      // Delete the currently signed-in user
-      Auth.$deleteUser().then(function() {
-        $scope.message = "User deleted";
-      }).catch(function(error) {
-        $scope.error = error;
-      });
-    };
-*/
-
 }]);
 
 
