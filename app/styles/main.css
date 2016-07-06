@@ -47,9 +47,17 @@ body {
     border-left-color: #111111;
 }
 
-.timeline-Header-title {
-  font-size: 12pt;
+.emphasis-circle {
+    -webkit-animation: pulsate 3.0s ease-out;
+    -webkit-animation-iteration-count: infinite;
 }
+
+@-webkit-keyframes pulsate {
+    0%   {color: black; transform: scale(1.0);}
+    10%  {color: #33f; transform: scale(1.3); }
+    20% {color: black; transform: scale(1.0);}
+}
+
 
 @media (max-width: 767px) {
     .navbar-collapse .nav > .divider-vertical {

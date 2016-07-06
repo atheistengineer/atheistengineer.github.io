@@ -1,7 +1,7 @@
 <div class="row">
   <div class="panel panel-default">
     <div class="panel-heading">
-      <span class="pull-right">
+      <div class="pull-right">
 
         <span class="label label-info" ng-show="firebaseUser"> Hey, {{ firebaseUser.displayName }}.</span>
         <span class="label label-warning" ng-hide="firebaseUser">Do I know you?</span>
@@ -10,18 +10,22 @@
 
         <span ng-show="firebaseUser" ng-click="auth.$signOut()" title="Sign Out"
               class="glyphicon glyphicon-log-out"></span>
+        <img ng-hide="firebaseUser" src="images/Twitter_bird_logo_2012.svg" style="height:1em;" />
         <span ng-hide="firebaseUser" ng-click="auth.$signInWithPopup('twitter')"  title="Sign In"
-              class="glyphicon glyphicon-log-in"></span>
-      </span>
+              class="glyphicon glyphicon-log-in emphasis-circle">
+              </span>
+      </div>
       <h2 class="panel-title"> Graphical Claims </h2>
     </div>
     <div class="panel-body">
       <div class="panel panel-default">
         <div class="panel-heading">
           <span title="Add node" ng-click="createNode()" ng-show="owner.$id === firebaseUser.uid" class="pull-right glyphicon glyphicon-plus"></span>
-          <span class="pull-right label label-info" class="pull-right">Owner:
+          <span class="pull-right label label-warning" ng-hide="graphEditable()">Read Only</span>
+          <span class="pull-right label label-success" ng-show="graphEditable()">Editable</span>
+          <span class="pull-right label label-info">Owner:
             {{ owner.displayName }}</span>
-          <h2 class="panel-title">Reasoning for <span editable-text="graph.name"
+          <h2 class="panel-title">Reasoning for <span editable-text="graph.name" e-ng-disabled="!graphEditable()"
                                                       onbeforesave="setSlug($data);">{{graph.name || "empty" }}</span>{{graph.key}}</h2>
         </div>
 
@@ -43,9 +47,12 @@
     </div>
     <div class="panel-body" ng-show="graph !== undefined">
       <div class="row">
+        <a id="twitter-timeline"></a>
+
         <a class="twitter-timeline"  ng-href="{{ twitterSearchUrl() }}"
            data-widget-id="750501845643190272" data-chrome="nofooter noheader noborders"
-            width="100%">Tweets about {{ graph.name }}</a>
+            width="100%">Tweets about {{ graph.name }} </a>
+
       </div>
 
       <ng-include src="'views/partials/bayesian-node.html'"></ng-include>

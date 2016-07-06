@@ -50,7 +50,7 @@
 
           </div>
           <div class="col-sm-6">
-            <button class="btn btn-default btn-xs pull-right" ng-disabled="!graphEditable()"
+            <button class="btn btn-default btn-xs pull-right" ng-show="graphEditable()"
                     ng-click="toggleEdgeTarget()"><span class="glyphicon glyphicon-plus"></span></button>
             <h4>{{node.label}} Therefore ...</h4>
             <form class="form-inline" ng-show="showEdgeTarget">

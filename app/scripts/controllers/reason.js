@@ -43,6 +43,13 @@ function ($scope, $routeParams, $location, $firebaseArray,
   if ($location.search().name !== undefined) {
     var name = $location.search().name;
     init_graph(name);
+    /* Need a way to do dynamic search.
+    twttr.widgets.createTimeline({
+      sourceType: "url",
+      url: "https://twitter.com/twitterdev/likes"
+    },
+    document.getElementById('twitter-timeline'));
+    */
   }
 
   var nodes = new VisDataSet();
@@ -55,7 +62,17 @@ function ($scope, $routeParams, $location, $firebaseArray,
   $scope.graph = {};
   // Some day this could be more sophistocated.
   $scope.graphEditable = function(uid){
-    return ($scope.firebaseUser !== null)  && ($scope.firebaseUser.uid === $scope.graph.owner);
+    var self = $scope.graph
+    if ($scope.firebaseUser === null){
+      return false
+    }
+    if (uid === undefined) {
+      uid = $scope.firebaseUser.uid;
+    }
+    if (self.collaborators === undefined){
+      self.collaborators = []
+    }
+    return (uid === self.owner) || (self.collaborators.indexOf(uid) >= 0);
   }
 
   var owner = undefined;
@@ -92,9 +109,19 @@ function ($scope, $routeParams, $location, $firebaseArray,
     return graph;
   }
 
-  $scope.$watch('graph.nodes', function(nodes){
-    $scope.graphData.nodes.add(nodes);
+  /*  results in an infinite loop. */
+  /*
+  $scope.$watch('graph.nodes', function(newNodes, oldNodes) {
+    var tgt_nodes = $scope.graphData.nodes;
+    $.map(newNodes, function(n){
+      if(tgt_nodes.get(n.id) === undefined)  {
+        tgt_nodes.add(n);
+      } else {
+        tgt_nodes.update(n);
+      }
+    });
   });
+  */
 
   // This function initializes the title & slug and starts saving the graph.
   $scope.setSlug = function (name) {
@@ -155,6 +182,43 @@ function ($scope, $routeParams, $location, $firebaseArray,
     $location.search(q2);
   };
 
+  function intersect(a, b, field) {
+    var results = [];
+    if  (field === undefined) {
+      var f = b;
+      var compare = function(el) {
+        return f.indexOf(el)>=0;
+      }
+    } else {
+      var f = b; //$.map(b, function(x) { return x[field]; });
+      var  compare = function(el) {
+        return f.indexOf(el[field])>=0;
+      }
+    }
+
+    results = $.grep(a, compare);
+    return results;
+  }
+
+  function set_diff(a, b, field) {
+    var results = [];
+    if  (field === undefined) {
+      var f = b;
+      var compare = function(el) {
+        return f.indexOf(el)==-1;
+      }
+    } else {
+      var f = b; //$.map(b, function(x) { return x[field]; });
+      var compare = function(el) {
+        return f.indexOf(el[field])==-1;
+      }
+    }
+
+    results = $.grep(a, compare)
+    return results;
+  }
+
+
   /* This function is called when something on the graph is selected. It
    updates the data models in angular to match the data in the graph.
   */
@@ -163,17 +227,25 @@ function ($scope, $routeParams, $location, $firebaseArray,
       ev.nodes = [];
     }
     $scope.selectedNodes = ev.nodes;
+    // TODO: A better way to do this would be to edit the angular data and always flow down
+    //       to the graph. This method requires complex bidirectional sync.
     $scope.selectedNodeObjects = $scope.graphData.nodes.get(ev.nodes);
+    // $scope.selectedNodeObjects = intersect($scope.graph.nodes, ev.nodes, "id");
+
 
     if (ev.edges === undefined){
       ev.edges = [];
     }
     $scope.selectedEdges = ev.edges;
     $scope.selectedEdgeObjects = $scope.graphData.edges.get(ev.edges);
+    // $scope.selectedEdgeObjects = intersect($scope.graph.edges, ev.edges, "id");
 
     $location.search({name:$scope.graph.name, edge:ev.edges, node:ev.nodes});
 
     if (ev.edges.length > 0){
+/*        $scope.supportedNode = intersect($scope.graph.nodes, [ev.edges[0].to], "id");
+        $scope.supportingNode = intersect($scope.graph.nodes, [ev.edges[0].from], "from");
+*/
         $scope.supportedNode = $scope.graphData.nodes.get(ev.edges[0].to);
         $scope.supportingNode = $scope.graphData.nodes.get(ev.edges[0].from);
     }
