@@ -14,22 +14,19 @@ function slugify(text)
 angular.module('atheistengineergithubioApp')
 .factory("ReasonFactory", ["$firebaseObject", "$q", function($firebaseObject, $q) {
   return $firebaseObject.$extend({
-    getOwnerProfile: function() {
-      var defer = $q.defer();
-
-      this.$loaded().then(function(self){
-        if (self.owner === undefined) {
-          console.log('Owner undefined', self);
-          defer.resolve(undefined);
-          return
-        }
-        var owner = firebase.database().ref("users").child(self.owner);
-        defer.resolve($firebaseObject(owner));
-      });
-      return defer.promise;
+    getOwnerProfile: function(me) {
+      if (this.owner === undefined) {
+        return
+      }
+      console.log('Owner defined', this.owner);
+      var owner = firebase.database().ref("users").child(this.owner);
+      return $firebaseObject(owner);
     },
     isEditable: function() {
-      return this.owner === firebase.auth().currentUser.uid;
+      if (this.owner === undefined) return;
+      var ans = (firebase.auth().currentUser!==null) && (this.owner === firebase.auth().currentUser.uid);
+      console.log('editable:', ans, firebase.auth().currentUser.uid, this.owner, this);
+      return ans;
     }
   });
 }])
@@ -52,6 +49,7 @@ angular.module('atheistengineergithubioApp')
           console.log("Value Exists", val)
           val.forEach(function(r){
             var ref = ReasonFactory(r.ref);
+            // This will only happen once.
             defer.resolve(ref);
             return;
           })

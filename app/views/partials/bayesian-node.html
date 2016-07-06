@@ -5,10 +5,10 @@
   <div class="panel-body">
     <div class="row" ng-repeat="node in selectedNodeObjects">
       <div class="col-sm-12">
-        <button class="btn btn-default btn-xs pull-right" ng-disabled="!graphEditable()"
+        <button class="btn btn-default btn-xs pull-right" ng-show="graphEditable()"
                 ng-click="removeNode(node)"><span class="glyphicon glyphicon-remove"></span></button>
         <h3>Claim Label: <a editable-text="node.label" e-ng-disabled="!graphEditable()" onbeforesave="graphData.nodes.update({'id': node.id, 'label':$data})">{{node.label || "empty"}}</a></h3>
-        <a class="pull-right" ng-disabled="!graphEditable()" ng-click="nodeDescForm.$show()" ng-hide="nodeDescForm.$visible"><span  class="glyphicon glyphicon-pencil"></span></a>
+        <a class="pull-right" ng-show="graphEditable()" ng-click="nodeDescForm.$show()" ng-hide="nodeDescForm.$visible"><span ng-show="graphEditable()" class="glyphicon glyphicon-pencil"></span></a>
         <p editable-textarea="node.desc" e-form="nodeDescForm" e-rows="7" e-cols="60"
            e-ng-disabled="!graphEditable()"
            onbeforesave="graphData.nodes.update({'id': node.id, 'desc':$data})">
@@ -35,12 +35,12 @@
         </div>
         <div class="row">
           <div class="col-sm-6">
-            <button class="btn btn-default btn-xs pull-right" ng-disabled="!graphEditable()"
+            <button class="btn btn-default btn-xs pull-right" ng-show="graphEditable()"
                     ng-click="toggleEdgeFrom()"><span class="glyphicon glyphicon-plus"></span></button>
             <h4>{{node.label}} Because ...</h4>
             <form class="form-inline" ng-show="showEdgeFrom">
               <select class="form-control" ng-options="n as n.label for n in graph.nodes" ng-model="edgeFrom"></select>
-              <button class="form-control"
+              <button class="form-control" ng-show="graphEditable()"
                       ng-click="createEdge(edgeFrom, selectedNodeObjects[0]); ">Add
               </button>
             </form>

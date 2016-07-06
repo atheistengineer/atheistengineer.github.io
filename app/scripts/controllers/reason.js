@@ -38,7 +38,7 @@ function ($scope, $routeParams, $location, $firebaseArray,
           $firebaseObject, Auth, Reason, VisDataSet, Firebase) {
 
   $scope.auth = Auth;
-  $scope.firebaseUser =  {}
+  $scope.firebaseUser =  null;
 
   if ($location.search().name !== undefined) {
     var name = $location.search().name;
@@ -55,9 +55,16 @@ function ($scope, $routeParams, $location, $firebaseArray,
   $scope.graph = {};
   // Some day this could be more sophistocated.
   $scope.graphEditable = function(uid){
-    return $scope.auth.$getAuth() && ($scope.auth.$getAuth().uid === $scope.graph.owner);
+    return ($scope.firebaseUser !== null)  && ($scope.firebaseUser.uid === $scope.graph.owner);
   }
 
+  var owner = undefined;
+  $scope.$watch('graph.owner', function (owner){
+    var owner = $scope.graph.owner;
+    if (owner) {
+      $scope.owner = $firebaseObject(firebase.database().ref("users").child(owner));
+    }
+  });
 
   function init_graph(name){
     var graph = Reason(name, $scope.auth.uid)
@@ -85,6 +92,10 @@ function ($scope, $routeParams, $location, $firebaseArray,
     return graph;
   }
 
+  $scope.$watch('graph.nodes', function(nodes){
+    $scope.graphData.nodes.add(nodes);
+  });
+
   // This function initializes the title & slug and starts saving the graph.
   $scope.setSlug = function (name) {
     if (!$scope.graph.slug && !$scope.graph.name) {
@@ -108,6 +119,7 @@ function ($scope, $routeParams, $location, $firebaseArray,
   // any time auth state changes, add the user data to scope
   $scope.auth.$onAuthStateChanged(function(firebaseUser) {
     $scope.firebaseUser = firebaseUser;
+    $scope.$apply();
   });
 
   $scope.graphOptions = {
@@ -117,7 +129,9 @@ function ($scope, $routeParams, $location, $firebaseArray,
     },
     'nodes': {
       'shape': 'box'
-    }
+    },
+    'height': '400px'
+
   };
 
   $scope.selectedNodes = [];
@@ -206,8 +220,12 @@ function ($scope, $routeParams, $location, $firebaseArray,
   };
 
   $scope.createNode = function()  {
-    var node_id = $scope.graphData.nodes.add({'label': 'New Node'});
-    $scope.select({'node':node_id});
+    if ($scope.graphEditable()){
+      var node_id = $scope.graphData.nodes.add({'label': 'New Node'});
+      $scope.select({'node':node_id});
+    } else {
+      console.log('Attempt to add node to read-only graph')
+    }
   };
 
   $scope.createEdge = function(from, to)  {

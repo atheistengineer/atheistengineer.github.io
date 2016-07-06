@@ -1,34 +1,33 @@
 <div class="row">
   <div class="panel panel-default">
     <div class="panel-heading">
-      <div class="pull-right">
-        <div ng-show="firebaseUser">
-          Hey, {{ firebaseUser.displayName }}.
-          <button class="btn btn-default btn-xs pull-right" ng-click="firebaseUser.$signOut()" title=""Sign Out"><span class="glyphicon glyphicon-log-out"></span></button>
-        </div>
-        <div ng-hide="firebaseUser">
-          Do I know you?
-          <button class="btn btn-default btn-xs pull-right" ng-click="auth.$signInWithPopup('twitter')"  title=""Sign In"><span class="glyphicon glyphicon-log-in"></span></button>
-        </div>
-      </div>
+      <span class="pull-right">
+
+        <span class="label label-info" ng-show="firebaseUser"> Hey, {{ firebaseUser.displayName }}.</span>
+        <span class="label label-warning" ng-hide="firebaseUser">Do I know you?</span>
+
+        <span class="glyphicon glyphicon-info-sign" title="It's my intention to develop a place where we can build and share dynamic graph representations or arguments and logical flows.  It's my hope that this can help clearly identify points of philosophical disagreement without losing the contextual focus of the discussion."></span>
+
+        <span ng-show="firebaseUser" ng-click="auth.$signOut()" title="Sign Out"
+              class="glyphicon glyphicon-log-out"></span>
+        <span ng-hide="firebaseUser" ng-click="auth.$signInWithPopup('twitter')"  title="Sign In"
+              class="glyphicon glyphicon-log-in"></span>
+      </span>
       <h2 class="panel-title"> Graphical Claims </h2>
-    </div>
-    <div class="panel-body">
-      <p>Though currently just static content, it's my intention to develop a place where we can build
-        and share dynamic graph representations or arguments and logical flows.  It's my hope that this
-        can help clearly identify points of philosophical disagreement without losing the contextual focus of
-        the discussion.
+  </div>
+  <div class="panel-body">
+      <p>
       </p>
     </div>
   </div>
 </div>
 <div class="panel panel-default">
   <div class="panel-heading">
-    <button class="btn btn-default btn-xs pull-right"
-            title="Add node" ng-click="createNode()" ng-disabled="!graphEditable()"><span class="glyphicon glyphicon-plus"></span></button>
-    <span class="pull-right">By {{graph.owner || "No Owner"}}</span>
+    <span title="Add node" ng-click="createNode()" ng-show="owner.$id === firebaseUser.uid" class="pull-right glyphicon glyphicon-plus"></span>
+    <span class="pull-right label label-info" class="pull-right">Owner:
+      {{ owner.displayName }}</span>
     <h2 class="panel-title">Reasoning for <span editable-text="graph.name"
-        e-ng-disabled="!(graph.name=='' | graphEditable())" onbeforesave="setSlug($data);">{{graph.name || "empty" }}</span>{{graph.key}}</h2>
+                                                onbeforesave="setSlug($data);">{{graph.name || "empty" }}</span>{{graph.key}}</h2>
   </div>
 
   <div class="panel-body" ng-show="graph !== undefined">
@@ -42,13 +41,15 @@
   </div>
 </div>
 
-<div class="row" ng-show="false">
+<div class="row" ng-show="true">
   <pre>
     {{graph | json}}
     {{selectedNodeObjects}}
   </pre>
   ownerProfile = {{ graph.owner }}, {{ graph.getOwnerProfile() }}
-  <br>
-  Graph Editable: {{ graphEditable() }} / {{ graph.isEditable() }}
-
+<pre>
+  Graph Editable: {{ graphEditable() }} / {{ graphEditable() }}
+  Owner: {{ owner }}
+  firebaseUser: {{ firebaseUser.uid }}
+</pre>
 </div>
