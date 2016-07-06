@@ -10,6 +10,7 @@
 
         <span ng-show="firebaseUser" ng-click="auth.$signOut()" title="Sign Out"
               class="glyphicon glyphicon-log-out"></span>
+        <img ng-hide="firebaseUser" src="images/Twitter_bird_logo_2012.svg" style="height:1em;" />
         <span ng-hide="firebaseUser" ng-click="auth.$signInWithPopup('twitter')"  title="Sign In"
               class="glyphicon glyphicon-log-in emphasis-circle">
               </span>
@@ -20,9 +21,11 @@
       <div class="panel panel-default">
         <div class="panel-heading">
           <span title="Add node" ng-click="createNode()" ng-show="owner.$id === firebaseUser.uid" class="pull-right glyphicon glyphicon-plus"></span>
-          <span class="pull-right label label-info" class="pull-right">Owner:
+          <span class="pull-right label label-warning" ng-hide="graphEditable()">Read Only</span>
+          <span class="pull-right label label-success" ng-show="graphEditable()">Editable</span>
+          <span class="pull-right label label-info">Owner:
             {{ owner.displayName }}</span>
-          <h2 class="panel-title">Reasoning for <span editable-text="graph.name"
+          <h2 class="panel-title">Reasoning for <span editable-text="graph.name" e-ng-disabled="!graphEditable()"
                                                       onbeforesave="setSlug($data);">{{graph.name || "empty" }}</span>{{graph.key}}</h2>
         </div>
 
