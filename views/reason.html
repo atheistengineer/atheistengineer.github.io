@@ -14,31 +14,45 @@
               class="glyphicon glyphicon-log-in"></span>
       </span>
       <h2 class="panel-title"> Graphical Claims </h2>
-  </div>
-  <div class="panel-body">
-      <p>
-      </p>
+    </div>
+    <div class="panel-body">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <span title="Add node" ng-click="createNode()" ng-show="owner.$id === firebaseUser.uid" class="pull-right glyphicon glyphicon-plus"></span>
+          <span class="pull-right label label-info" class="pull-right">Owner:
+            {{ owner.displayName }}</span>
+          <h2 class="panel-title">Reasoning for <span editable-text="graph.name"
+                                                      onbeforesave="setSlug($data);">{{graph.name || "empty" }}</span>{{graph.key}}</h2>
+        </div>
+
+        <div class="panel-body" ng-show="graph !== undefined">
+          <div class="row">
+              <vis-network data="graphData" options="graphOptions" on-click="events" events="events"></vis-network>
+          </div>
+
+          <ng-include src="'views/partials/bayesian-node.html'"></ng-include>
+          <ng-include src="'views/partials/bayesian-edge.html'"></ng-include>
+
+        </div>
+      </div>
     </div>
   </div>
-</div>
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <span title="Add node" ng-click="createNode()" ng-show="owner.$id === firebaseUser.uid" class="pull-right glyphicon glyphicon-plus"></span>
-    <span class="pull-right label label-info" class="pull-right">Owner:
-      {{ owner.displayName }}</span>
-    <h2 class="panel-title">Reasoning for <span editable-text="graph.name"
-                                                onbeforesave="setSlug($data);">{{graph.name || "empty" }}</span>{{graph.key}}</h2>
-  </div>
-
-  <div class="panel-body" ng-show="graph !== undefined">
-    <div class="row">
-        <vis-network data="graphData" options="graphOptions" on-click="events" events="events"></vis-network>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h2 class="panel-title">Related Tweets</h2>
     </div>
+    <div class="panel-body" ng-show="graph !== undefined">
+      <div class="row">
+        <a class="twitter-timeline"  ng-href="{{ twitterSearchUrl() }}"
+           data-widget-id="750501845643190272" data-chrome="nofooter noheader noborders"
+            width="100%">Tweets about {{ graph.name }}</a>
+      </div>
 
-    <ng-include src="'views/partials/bayesian-node.html'"></ng-include>
-    <ng-include src="'views/partials/bayesian-edge.html'"></ng-include>
+      <ng-include src="'views/partials/bayesian-node.html'"></ng-include>
+      <ng-include src="'views/partials/bayesian-edge.html'"></ng-include>
 
-  </div>
+    </div>
+    </div>
 </div>
 
 <div class="row" ng-show="false">
@@ -53,3 +67,5 @@
   firebaseUser: {{ firebaseUser.uid }}
 </pre>
 </div>
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
