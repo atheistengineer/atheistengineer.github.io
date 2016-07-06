@@ -47,6 +47,10 @@ body {
     border-left-color: #111111;
 }
 
+.timeline-Header-title {
+  font-size: 12pt;
+}
+
 @media (max-width: 767px) {
     .navbar-collapse .nav > .divider-vertical {
         display: none;

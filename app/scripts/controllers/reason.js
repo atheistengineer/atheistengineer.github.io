@@ -114,7 +114,11 @@ function ($scope, $routeParams, $location, $firebaseArray,
     $location.search({'reason': $scope.graph.name})
   };
 
-
+  $scope.twitterSearchUrl = function(){
+    var qry = $location.search();
+    return 'https://twitter.com/search?q=' + encodeURI($location.url());
+    //http%3A%2F%2Fwww.atheistengineer.com%2F%23%2Freason%3Fname%3DTotally%2520Awesome%2520Graph
+  }
 
   // any time auth state changes, add the user data to scope
   $scope.auth.$onAuthStateChanged(function(firebaseUser) {
