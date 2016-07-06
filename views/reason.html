@@ -1,0 +1,78 @@
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="pull-right">
+
+        <span class="label label-info" ng-show="firebaseUser"> Hey, {{ firebaseUser.displayName }}.</span>
+        <span class="label label-warning" ng-hide="firebaseUser">Do I know you?</span>
+
+        <span class="glyphicon glyphicon-info-sign" title="It's my intention to develop a place where we can build and share dynamic graph representations or arguments and logical flows.  It's my hope that this can help clearly identify points of philosophical disagreement without losing the contextual focus of the discussion."></span>
+
+        <span ng-show="firebaseUser" ng-click="auth.$signOut()" title="Sign Out"
+              class="glyphicon glyphicon-log-out"></span>
+        <img ng-hide="firebaseUser" src="images/Twitter_bird_logo_2012.svg" style="height:1em;" />
+        <span ng-hide="firebaseUser" ng-click="auth.$signInWithPopup('twitter')"  title="Sign In"
+              class="glyphicon glyphicon-log-in emphasis-circle">
+              </span>
+      </div>
+      <h2 class="panel-title"> Graphical Claims </h2>
+    </div>
+    <div class="panel-body">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <span title="Add node" ng-click="createNode()" ng-show="owner.$id === firebaseUser.uid" class="pull-right glyphicon glyphicon-plus"></span>
+          <span class="pull-right label label-warning" ng-hide="graphEditable()">Read Only</span>
+          <span class="pull-right label label-success" ng-show="graphEditable()">Editable</span>
+          <span class="pull-right label label-info">Owner:
+            {{ owner.displayName }}</span>
+          <h2 class="panel-title">Reasoning for <span editable-text="graph.name" e-ng-disabled="!graphEditable()"
+                                                      onbeforesave="setSlug($data);">{{graph.name || "empty" }}</span>{{graph.key}}</h2>
+        </div>
+
+        <div class="panel-body" ng-show="graph !== undefined">
+          <div class="row">
+              <vis-network data="graphData" options="graphOptions" on-click="events" events="events"></vis-network>
+          </div>
+
+          <ng-include src="'views/partials/bayesian-node.html'"></ng-include>
+          <ng-include src="'views/partials/bayesian-edge.html'"></ng-include>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h2 class="panel-title">Related Tweets</h2>
+    </div>
+    <div class="panel-body" ng-show="graph !== undefined">
+      <div class="row">
+        <a id="twitter-timeline"></a>
+
+        <a class="twitter-timeline"  ng-href="{{ twitterSearchUrl() }}"
+           data-widget-id="750501845643190272" data-chrome="nofooter noheader noborders"
+            width="100%">Tweets about {{ graph.name }} </a>
+
+      </div>
+
+      <ng-include src="'views/partials/bayesian-node.html'"></ng-include>
+      <ng-include src="'views/partials/bayesian-edge.html'"></ng-include>
+
+    </div>
+    </div>
+</div>
+
+<div class="row" ng-show="false">
+  <pre>
+    {{graph | json}}
+    {{selectedNodeObjects}}
+  </pre>
+  ownerProfile = {{ graph.owner }}, {{ graph.getOwnerProfile() }}
+<pre>
+  Graph Editable: {{ graphEditable() }} / {{ graphEditable() }}
+  Owner: {{ owner }}
+  firebaseUser: {{ firebaseUser.uid }}
+</pre>
+</div>
+
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
