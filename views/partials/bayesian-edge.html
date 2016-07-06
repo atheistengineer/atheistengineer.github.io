@@ -7,13 +7,10 @@
   <div class="panel-body">
   <div class="row" ng-repeat="edge in selectedEdgeObjects">
     <div class="col-sm-12">
-      <button class="btn btn-default btn-xs pull-right" ng-show="graphEditable()" ng-click="removeEdge(edge)"><span class="glyphicon glyphicon-remove"></span></button>
-      <h3>Relationship Label: <a editable-text="edge.label" e-ng-disabled="!graphEditable()"
-                                 onbeforesave="graphData.edges.update({'id': edge.id, 'label':$data})">{{edge.label || "empty"}}</a></h3>
-      <a class="pull-right" ng-click="edgeDescForm.$show()" ng-show="graphEditable()"
-         ng-hide="edgeDescForm.$visible"><span ng-show="graphEditable()" class="glyphicon glyphicon-pencil"></span></a>
+      <button class="btn btn-default btn-xs pull-right" ng-click="removeEdge(edge)"><span class="glyphicon glyphicon-remove"></span></button>
+      <h3>Relationship Label: <a editable-text="edge.label" onbeforesave="graphData.edges.update({'id': edge.id, 'label':$data})">{{edge.label || "empty"}}</a></h3>
+      <a class="pull-right" ng-click="edgeDescForm.$show()" ng-hide="edgeDescForm.$visible"><span  class="glyphicon glyphicon-pencil"></span></a>
       <p editable-textarea="edge.desc" e-form="edgeDescForm" e-rows="7" e-cols="60"
-         e-ng-disabled="!graphEditable()"
           onbeforesave="graphData.edges.update({'id': node.id, 'desc':$data})">
         {{ edge.desc || 'empty' }}
       </p>

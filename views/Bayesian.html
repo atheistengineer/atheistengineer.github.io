@@ -1,0 +1,32 @@
+<div class="row">
+<h1> Graphical Analysis of Philosophy </h1>
+  <p>Though currently just static content, it's my intention to develop a place where we can build
+    and share dynamic graph representations or arguments and logical flows.  It's my hope that this
+    can help clearly identify points of philosophical disagreement without losing the contextual focus of
+    the discussion.
+  </p>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <button class="btn btn-default btn-xs pull-right" ng-click="createNode()"><span class="glyphicon glyphicon-plus"></span></button>
+    <h2 class="panel-title">Graph Analysis of <span editable-text="graph.name">{{graph.name || "empty" }}</span></h2>
+  </div>
+
+  <div class="panel-body">
+    <div class="row">
+        <vis-network data="graphData" options="graphOptions" on-click="events" events="events"></vis-network>
+    </div>
+
+    <ng-include src="'views/partials/bayesian-node.html'"></ng-include>
+    <ng-include src="'views/partials/bayesian-edge.html'"></ng-include>
+
+  </div>
+</div>
+
+<div class="row" ng-show="false">
+  <pre>
+    {{graph.nodes | json}}
+    {{selectedNodeObjects}}
+  </pre>
+</div>
