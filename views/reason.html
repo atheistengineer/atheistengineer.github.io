@@ -1,7 +1,7 @@
 <div class="row">
   <div class="panel panel-default">
     <div class="panel-heading">
-      <span class="pull-right">
+      <div class="pull-right">
 
         <span class="label label-info" ng-show="firebaseUser"> Hey, {{ firebaseUser.displayName }}.</span>
         <span class="label label-warning" ng-hide="firebaseUser">Do I know you?</span>
@@ -11,8 +11,9 @@
         <span ng-show="firebaseUser" ng-click="auth.$signOut()" title="Sign Out"
               class="glyphicon glyphicon-log-out"></span>
         <span ng-hide="firebaseUser" ng-click="auth.$signInWithPopup('twitter')"  title="Sign In"
-              class="glyphicon glyphicon-log-in"></span>
-      </span>
+              class="glyphicon glyphicon-log-in emphasis-circle">
+              </span>
+      </div>
       <h2 class="panel-title"> Graphical Claims </h2>
     </div>
     <div class="panel-body">
@@ -43,9 +44,12 @@
     </div>
     <div class="panel-body" ng-show="graph !== undefined">
       <div class="row">
+        <a id="twitter-timeline"></a>
+
         <a class="twitter-timeline"  ng-href="{{ twitterSearchUrl() }}"
            data-widget-id="750501845643190272" data-chrome="nofooter noheader noborders"
-            width="100%">Tweets about {{ graph.name }}</a>
+            width="100%">Tweets about {{ graph.name }} </a>
+
       </div>
 
       <ng-include src="'views/partials/bayesian-node.html'"></ng-include>
