@@ -1,0 +1,13 @@
+<div class="panel panel-default">
+
+  <div class="panel-heading">
+    <h2 class="panel-title">Pick a Reason</h2>
+  </div>
+  <div class="panel-body">
+    <div class="row" >
+      <ul ng-repeat="reason in reasons">
+        <li><a ng-href="#/reason?name={{reason.name}}">{{reason.name}}</a></li>
+      </ul>
+    </div>
+  </div>
+</div>

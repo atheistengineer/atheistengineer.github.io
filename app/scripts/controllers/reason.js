@@ -33,37 +33,74 @@
  */
 angular.module('atheistengineergithubioApp')
 .controller('ReasonCtrl', ['$scope', '$routeParams', '$location', '$firebaseArray',
-'$firebaseObject', 'Auth', 'Reason', 'VisDataSet', 'Firebase',
+'$firebaseObject', 'Auth', 'Reason', 'ReasonList', 'VisDataSet', 'Firebase',
 function ($scope, $routeParams, $location, $firebaseArray,
-          $firebaseObject, Auth, Reason, VisDataSet, Firebase) {
+          $firebaseObject, Auth, Reason, ReasonList, VisDataSet, Firebase) {
 
   $scope.auth = Auth;
   $scope.firebaseUser =  null;
+  $scope.graph = null;
+  $scope.unbindGraph = function() {};
 
-  if ($location.search().name !== undefined) {
-    var name = $location.search().name;
-    init_graph(name);
-    /* Need a way to do dynamic search.
-    twttr.widgets.createTimeline({
-      sourceType: "url",
-      url: "https://twitter.com/twitterdev/likes"
-    },
-    document.getElementById('twitter-timeline'));
-    */
+  function notImplemented(){
+    alert("This feature isn't yet implemented. Sorry!");
   }
+  $scope.downloadGraph = notImplemented;
+  $scope.uploadGraph = notImplemented;
+
+  $scope.newGraph = function() {
+    $scope.unbindGraph();
+    $scope.graphData.nodes.clear();
+    $scope.graphData.edges.clear();
+    $scope.graph = null;
+  }
+
+  function load_graph(){
+    var name = $location.search().name;
+    if (name !== undefined){
+      $scope.unbindGraph();
+      init_graph(name);
+    } else  {
+      $scope.unbindGraph();
+      $scope.graph = null;
+    }
+  }
+
+  $scope.$on('$routeUpdate', load_graph);
+  load_graph();
 
   var nodes = new VisDataSet();
   var edges = new VisDataSet();
+
   $scope.graphData = {
-    nodes: nodes,
-    edges: edges
+    'nodes': nodes,
+    'edges': edges
   };
 
-  $scope.graph = {};
+  $scope.reasons = ReasonList();
+
   // Some day this could be more sophistocated.
-  $scope.graphEditable = function(uid){
+  $scope.graphEditable = false;
+  $scope.copyGraph = function(){
+    $scope.unbindGraph();
+    var new_graph={
+      owner: $scope.firebaseUser.uid,
+      nodes: $scope.graph.nodes,
+      edges: $scope.graph.edges,
+      name: $scope.graph.name+ " (copy)"
+    };
+    init_graph(new_graph.name)
+    .then(function(gr) {
+      gr.owner = $scope.firebaseUser.uid;
+      gr.nodes = new_graph.nodes;
+      gr.edges = new_graph.edges;
+    });
+  }
+
+  function graphEditable(uid){
     var self = $scope.graph
-    if ($scope.firebaseUser === null){
+    if (($scope.firebaseUser === null)  || (self === undefined)) {
+      $scope.graphEditable=false;
       return false
     }
     if (uid === undefined) {
@@ -72,13 +109,15 @@ function ($scope, $routeParams, $location, $firebaseArray,
     if (self.collaborators === undefined){
       self.collaborators = []
     }
-    return (uid === self.owner) || (self.collaborators.indexOf(uid) >= 0);
+    $scope.graphEditable = (uid === self.owner) || (self.collaborators.indexOf(uid) >= 0);
+    return $scope.graphEditable;
   }
+
 
   var owner = undefined;
   $scope.$watch('graph.owner', function (owner){
-    var owner = $scope.graph.owner;
-    if (owner) {
+    // var owner = $scope.graph.owner;
+    if (owner !== undefined) {
       $scope.owner = $firebaseObject(firebase.database().ref("users").child(owner));
     }
   });
@@ -87,13 +126,27 @@ function ($scope, $routeParams, $location, $firebaseArray,
     var graph = Reason(name, $scope.auth.uid)
     graph.then(function(val){
       $scope.graph = val;
-      val.$bindTo($scope, "graph");
+
+      val.$bindTo($scope, "graph")
+        .then(function(unbind){
+          $scope.unbindGraph = unbind;
+        });
+
+      if (graphEditable()){
+        $scope.graphEditable=true;
+      } else {
+        $scope.graphEditable=false;
+      }
+
       val.$loaded().then(function(v){
+        console.log('Loaded: ', v)
         if (v.nodes !== undefined) {
+          nodes.clear();
           nodes.add(v.nodes);
         }
         if (v.edges !== undefined) {
-          edges.add(val.edges);
+          edges.clear();
+          edges.add(v.edges);
         }
       })
 
@@ -150,7 +203,6 @@ function ($scope, $routeParams, $location, $firebaseArray,
   // any time auth state changes, add the user data to scope
   $scope.auth.$onAuthStateChanged(function(firebaseUser) {
     $scope.firebaseUser = firebaseUser;
-    $scope.$apply();
   });
 
   $scope.graphOptions = {
@@ -161,8 +213,7 @@ function ($scope, $routeParams, $location, $firebaseArray,
     'nodes': {
       'shape': 'box'
     },
-    'height': '400px'
-
+    'height': '400px',
   };
 
   $scope.selectedNodes = [];
@@ -275,7 +326,7 @@ function ($scope, $routeParams, $location, $firebaseArray,
       $scope.supportingNodes = [];
     }
 
-    if(noapply !== true) {
+   if(noapply !== true) {
       $scope.$apply();
     }
   }
@@ -296,7 +347,7 @@ function ($scope, $routeParams, $location, $firebaseArray,
   };
 
   $scope.createNode = function()  {
-    if ($scope.graphEditable()){
+    if ($scope.graphEditable){
       var node_id = $scope.graphData.nodes.add({'label': 'New Node'});
       $scope.select({'node':node_id});
     } else {

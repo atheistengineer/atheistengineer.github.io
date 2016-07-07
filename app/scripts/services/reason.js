@@ -13,14 +13,20 @@ function slugify(text)
 // From: https://www.sitepoint.com/creating-crud-app-minutes-angulars-resource/
 angular.module('atheistengineergithubioApp')
 .factory("ReasonFactory", ["$firebaseObject", "$q", function($firebaseObject, $q) {
+  var lastOwner=null;
+  var lastProfile=null;
   return $firebaseObject.$extend({
     getOwnerProfile: function(me) {
       if (this.owner === undefined) {
         return
       }
+      if (this.owner !== lastOwner) {
+      } else {
+        var owner = firebase.database().ref("users").child(this.owner);
+        lastProfile = $firebaseObject(owner);
+      }
+      return lastProfile;
       console.log('Owner defined', this.owner);
-      var owner = firebase.database().ref("users").child(this.owner);
-      return $firebaseObject(owner);
     },
     isEditable: function() {
       if (this.owner === undefined) return;
@@ -34,6 +40,7 @@ angular.module('atheistengineergithubioApp')
   function(ReasonFactory, $q) {
     return function(name) {
       var slug = slugify(name);
+
       // Get a reference to the "reasons" list.
       var reasons = firebase.database().ref("reasons");
 
@@ -72,6 +79,16 @@ angular.module('atheistengineergithubioApp')
         }
       });
       return defer.promise;
+    }
+  }
+])
+.factory("ReasonList", [ '$firebaseObject', '$firebaseArray',
+  function($firebaseObject, $firebaseArray) {
+    return function(name) {
+      // Get a reference to the "reasons" list.
+      var path="reasons";
+      var ref =  firebase.database().ref(path) ;
+      return $firebaseObject(ref);
     }
   }
 ]);
