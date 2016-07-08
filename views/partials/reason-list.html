@@ -6,7 +6,10 @@
   <div class="panel-body">
     <div class="row" >
       <ul ng-repeat="reason in reasons">
-        <li><a ng-href="#/reason?name={{reason.name}}">{{reason.name}}</a></li>
+        <li>
+          <span class="label label-warning" ng-hide="graphEditable(reason)">Read Only</span>
+          <span class="label label-success" ng-show="graphEditable(reason)">Editable</span>
+          <a ng-href="#/reason?name={{reason.name}}">{{reason.name}}</a></li>
       </ul>
     </div>
   </div>
