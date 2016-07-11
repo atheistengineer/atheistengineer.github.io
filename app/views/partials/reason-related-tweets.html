@@ -1,0 +1,18 @@
+<!-- Currently this code doesn't work. Not sure how to dynamically link to search content.
+Might be forced to use the API, which quickly gets messy. -->
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h2 class="panel-title">Related Tweets</h2>
+  </div>
+  <div class="panel-body" ng-show="graph !== undefined">
+    <div class="row">
+      <a id="twitter-timeline"></a>
+
+      <a class="twitter-timeline"  ng-href="{{ twitterSearchUrl() }}"
+         data-widget-id="750501845643190272" data-chrome="nofooter noheader noborders"
+         width="100%">Tweets about {{ graph.name }} </a>
+
+    </div>
+  </div>
+</div>

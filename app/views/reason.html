@@ -1,17 +1,17 @@
 <div class="row">
   <div class="panel panel-default">
     <div class="panel-heading">
-      <div class="pull-right">
-
-        <span class="label label-info" ng-show="firebaseUser"> Hey, {{ firebaseUser.displayName }}.</span>
-        <span class="label label-warning" ng-hide="firebaseUser">Do I know you?</span>
+      <div class="pull-left" style="margin-right:1em;">
         <span uib-dropdown on-toggle="toggled(open)">
           <a href id="menu-dropdown" uib-dropdown-toggle class="glyphicon glyphicon-menu-hamburger"></a>
           <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="menu-dropdown">
             <li><a ng-click="newGraph()">New</a></li>
             <li><a ng-click="copyGraph()">Copy</a></li>
+            <li><a ng-click="renameGraph()">Rename</a></li>
             <li><a ng-click="uploadGraph()">Upload</a></li>
             <li><a ng-click="downloadGraph()">Download</a></li>
+            <li class="divider"></li>
+            <li><a ng-click="graphProperties()">Properties</a></li>
             <li class="divider"></li>
             <li ng-class="{disabled: firebaseUser!==null}"><a ng-click="(firebaseUser!==null) || auth.$signInWithPopup('twitter')"><img src="images/Twitter_bird_logo_2012.svg" style="height:1em;" />
               Login with Twitter</a></li>
@@ -19,7 +19,12 @@
           </ul>
         </span>
       </div>
-      <h2 class="panel-title"> Graphical Claims </h2>
+      <i class="pull-right glyphicon glyphicon-pencil" title="Editable" style="color:green;" ng-show="graphEditable()"></i>
+      <i class="pull-right glyphicon glyphicon-ban-circle" title="Read only"  style="color:red;" ng-hide="graphEditable()"></i>
+      <h2 class="panel-title"> Graphical Claims - [{{graph.name}}]
+        <span class="label label-info" ng-show="firebaseUser">{{ firebaseUser.displayName }}</span>
+        <span class="label label-warning" ng-hide="firebaseUser">Anonymous</span>
+      </h2>
     </div>
 
     <div class="panel-body">
@@ -28,48 +33,21 @@
 
       <div class="panel panel-default">
 
-        <div class="panel-heading">
-          <span title="Add node" ng-click="createNode()" ng-show="owner.$id === firebaseUser.uid" class="pull-right glyphicon glyphicon-plus"></span>
-          <span class="pull-right label label-warning" ng-hide="graphEditable">Read Only</span>
-          <span class="pull-right label label-success" ng-show="graphEditable">Editable</span>
-          <span class="pull-right label label-info">Owner:
-            {{ owner.displayName }}</span>
-          <h2 class="panel-title">Reasoning for <span editable-text="graph.name" e-ng-disabled="!graphEditable"
-                                                      onbeforesave="setSlug($data);">{{graph.name || "empty" }}</span>{{graph.key}}</h2>
+        <div class="row">
+          <!-- Wrapping in any sort of ng-show or ng-hide causes problems! -->
+          <vis-network data="graphData" options="graphOptions" events="events" ng-events="events"></vis-network>
         </div>
 
-        <div class="panel-body">
-          <div class="row">
-            <!-- Wrapping in any sort of ng-show or ng-hide causes problems! -->
-            <vis-network data="graphData" options="graphOptions" events="events" ng-events="events"></vis-network>
-          </div>
+        <ng-include src="'views/partials/bayesian-node.html'"></ng-include>
+        <ng-include src="'views/partials/bayesian-edge.html'"></ng-include>
 
-          <ng-include src="'views/partials/bayesian-node.html'"></ng-include>
-          <ng-include src="'views/partials/bayesian-edge.html'"></ng-include>
-
-        </div>
       </div>
     </div>
   </div>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h2 class="panel-title">Related Tweets</h2>
-    </div>
-    <div class="panel-body" ng-show="graph !== undefined">
-      <div class="row">
-        <a id="twitter-timeline"></a>
 
-        <a class="twitter-timeline"  ng-href="{{ twitterSearchUrl() }}"
-           data-widget-id="750501845643190272" data-chrome="nofooter noheader noborders"
-            width="100%">Tweets about {{ graph.name }} </a>
+  <ng-include src="'views/partials/bayesian-node.html'"></ng-include>
+  <ng-include src="'views/partials/bayesian-edge.html'"></ng-include>
 
-      </div>
-
-      <ng-include src="'views/partials/bayesian-node.html'"></ng-include>
-      <ng-include src="'views/partials/bayesian-edge.html'"></ng-include>
-
-    </div>
-    </div>
 </div>
 
 <div class="row" ng-show="true">

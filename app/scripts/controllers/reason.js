@@ -27,7 +27,7 @@
 
  In the general case the length of the truth vector goes as 2^N where N
  is the number of edges which connect to the node.  Question is: Do I want
- to implement something this complex or just implement probability of the
+ to ` something this complex or just implement probability of the
  target node truth if the independent node is true vs valse, storing this
  2-element truth table on the edge?
  */
@@ -47,20 +47,23 @@ function ($scope, $routeParams, $location, $firebaseArray,
   }
   $scope.downloadGraph = notImplemented;
   $scope.uploadGraph = notImplemented;
+  $scope.renameGraph = notImplemented;
+  $scope.graphPropmmierties = notImplemented;
 
   $scope.newGraph = function() {
     $scope.unbindGraph();
     $scope.graphData.nodes.clear();
     $scope.graphData.edges.clear();
     $scope.graph = null;
+    $location.search({});
   }
 
   function load_graph(){
     var name = $location.search().name;
-    if (name !== undefined){
+    if ((name !== undefined) && (($scope.graph === null) || (name !== $scope.graph.name))) {
       $scope.unbindGraph();
       init_graph(name);
-    } else  {
+    } else if (name === undefined)  {
       $scope.unbindGraph();
       $scope.graph = null;
     }
@@ -80,7 +83,7 @@ function ($scope, $routeParams, $location, $firebaseArray,
   $scope.reasons = ReasonList();
 
   // Some day this could be more sophistocated.
-  $scope.graphEditable = false;
+  $scope._graphEditable = false;
   $scope.copyGraph = function(){
     $scope.unbindGraph();
     var new_graph={
@@ -89,30 +92,56 @@ function ($scope, $routeParams, $location, $firebaseArray,
       edges: $scope.graph.edges,
       name: $scope.graph.name+ " (copy)"
     };
-    init_graph(new_graph.name)
-    .then(function(gr) {
-      gr.owner = $scope.firebaseUser.uid;
-      gr.nodes = new_graph.nodes;
-      gr.edges = new_graph.edges;
+    $scope.unbindGraph();
+    var graph = Reason(name, $scope.auth.uid)
+    graph.then(function(val){
+      val.owner = $scope.firebaseUser.uid;
+      val.nodes = new_graph.nodes;
+      val.edges = new_graph.edges;
+      val.name = new_graph.name;
+      val.$save();
+
+      $scope.graph = val;
+
+      val.$bindTo($scope, "graph")
+        .then(function(unbind){
+          $scope.unbindGraph = unbind;
+        });
+
+      if ($scope.graphEditable()){
+        $scope._graphEditable=true;
+      } else {
+        $scope._graphEditable=false;
+      }
     });
   }
 
-  function graphEditable(uid){
-    var self = $scope.graph
-    if (($scope.firebaseUser === null)  || (self === undefined)) {
-      $scope.graphEditable=false;
+  $scope.graphEditable = function(reason, uid){
+    var set_scope = false;
+
+    // If we evaluate user's ability to edit the global graph cache it to the scope.
+    if (reason === undefined) {
+      reason = $scope.graph;
+      var set_scope=true;
+    }
+
+    if (reason == null) {
+      return false;
+    }
+
+    if (($scope.firebaseUser === null)  || (reason === undefined)) {
+      if (set_scope) $scope._graphEditable=false;
       return false
     }
     if (uid === undefined) {
       uid = $scope.firebaseUser.uid;
     }
-    if (self.collaborators === undefined){
-      self.collaborators = []
-    }
-    $scope.graphEditable = (uid === self.owner) || (self.collaborators.indexOf(uid) >= 0);
-    return $scope.graphEditable;
-  }
 
+    var result = ((uid === reason.owner) ||
+        ((reason.collaborators !== undefined) && (reason.collaborators.indexOf(uid) >= 0)));
+    if (set_scope) $scope._graphEditable = result
+    return result;
+  }
 
   var owner = undefined;
   $scope.$watch('graph.owner', function (owner){
@@ -123,6 +152,7 @@ function ($scope, $routeParams, $location, $firebaseArray,
   });
 
   function init_graph(name){
+    $scope.unbindGraph();
     var graph = Reason(name, $scope.auth.uid)
     graph.then(function(val){
       $scope.graph = val;
@@ -132,10 +162,10 @@ function ($scope, $routeParams, $location, $firebaseArray,
           $scope.unbindGraph = unbind;
         });
 
-      if (graphEditable()){
-        $scope.graphEditable=true;
+      if ($scope.graphEditable()){
+        $scope._graphEditable=true;
       } else {
-        $scope.graphEditable=false;
+        $scope._graphEditable=false;
       }
 
       val.$loaded().then(function(v){
@@ -347,7 +377,7 @@ function ($scope, $routeParams, $location, $firebaseArray,
   };
 
   $scope.createNode = function()  {
-    if ($scope.graphEditable){
+    if ($scope._graphEditable){
       var node_id = $scope.graphData.nodes.add({'label': 'New Node'});
       $scope.select({'node':node_id});
     } else {
