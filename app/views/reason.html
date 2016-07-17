@@ -38,8 +38,8 @@
           <vis-network data="graphData" options="graphOptions" events="events" ng-events="events"></vis-network>
         </div>
 
-        <ng-include src="'views/partials/bayesian-node.html'"></ng-include>
-        <ng-include src="'views/partials/bayesian-edge.html'"></ng-include>
+        <ng-include src="'views/partials/reason-node.html'"></ng-include>
+        <ng-include src="'views/partials/reason-edge.html'"></ng-include>
 
       </div>
     </div>
@@ -50,7 +50,7 @@
 
 </div>
 
-<div class="row" ng-show="true">
+<div class="row" ng-show="false">
   <pre>
     {{graph | json}}
     {{selectedNodeObjects}}

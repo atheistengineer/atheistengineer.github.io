@@ -240,6 +240,9 @@ function ($scope, $routeParams, $location, $firebaseArray,
       'selectConnectedEdges': false,
       'hover': false
     },
+    'layout':{
+      'hierarchical': false
+    },
     'nodes': {
       'shape': 'box'
     },

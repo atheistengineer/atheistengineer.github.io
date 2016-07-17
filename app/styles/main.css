@@ -132,11 +132,3 @@ body {
     border-bottom: 0;
   }
 }
-
-/* Based on http://stackoverflow.com/questions/19472396/bootstrap-3-can-the-glyphicons-be-stacked-like-font-awesomes-icons  */
-.icon-stack {
-    position: relative;
-}
-.icon-stack .glyphicon {
-    position: absolute;
-}
