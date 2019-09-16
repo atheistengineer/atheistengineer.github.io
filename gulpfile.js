@@ -2,6 +2,7 @@
 'use strict';
 
 var gulp = require('gulp');
+var gutil = require('gulp-util');
 var $ = require('gulp-load-plugins')();
 var openURL = require('open');
 var lazypipe = require('lazypipe');
@@ -54,6 +55,16 @@ var styles = lazypipe()
   .pipe($.autoprefixer, 'last 1 version')
   .pipe(gulp.dest, '.tmp/styles');
 
+///////////////////
+// Prerequisites
+///////////////////
+
+gulp.task('html', function () {
+  return gulp.src(yeoman.app + '/views/**/*')
+    .pipe(gulp.dest(yeoman.dist + '/views'));
+});
+
+
 ///////////
 // Tasks //
 ///////////
@@ -65,25 +76,23 @@ gulp.task('deploy', function () {
     .pipe(deploy({ 'branch': 'master' }))
 });
 // Alias because I keep forgetting the name.
-gulp.task('publish', ['deploy'])
+gulp.task('publish', gulp.series('deploy'))
 
 
 gulp.task('styles', function () {
   return gulp.src(paths.styles)
-    .pipe(styles());
+    .pipe(styles())
+    .pipe(gutil.noop());
 });
 
 gulp.task('lint:scripts', function () {
   return gulp.src(paths.scripts)
-    .pipe(lintScripts());
+    .pipe(lintScripts())
+    .pipe(gutil.noop());
 });
 
 gulp.task('clean:tmp', function (cb) {
   rimraf('./.tmp', cb);
-});
-
-gulp.task('start:client', ['start:server', 'styles'], function () {
-  openURL('http://localhost:9000');
 });
 
 gulp.task('start:server', function () {
@@ -94,6 +103,7 @@ gulp.task('start:server', function () {
     port: 9000
   });
 });
+
 
 gulp.task('start:server:test', function () {
   $.connect.server({
@@ -125,12 +135,13 @@ gulp.task('watch', function () {
   gulp.watch('bower.json', ['bower']);
 });
 
-gulp.task('serve', function (cb) {
-  runSequence('clean:tmp',
-    ['lint:scripts'],
-    ['start:client'],
-    'watch', cb);
-});
+gulp.task('start:client', gulp.series('start:server', 'styles', function () {
+  openURL('http://localhost:9000');
+}));
+
+gulp.task('serve', 
+  gulp.series('clean:tmp', 'lint:scripts', gulp.parallel('start:client', 'watch'))
+);
 
 gulp.task('serve:prod', function () {
   $.connect.server({
@@ -140,14 +151,14 @@ gulp.task('serve:prod', function () {
   });
 });
 
-gulp.task('test', ['start:server:test'], function () {
+gulp.task('test', gulp.series('start:server:test', function () {
   var testToFiles = paths.testRequire.concat(paths.scripts, paths.test);
   return gulp.src(testToFiles)
     .pipe($.karma({
       configFile: paths.karma,
       action: 'watch'
     }));
-});
+}));
 
 gulp.task('dist:bower:fonts', function () {
   return gulp.src('./bower_components/**/*.{eot,svg,ttf,woff,woff2}')
@@ -166,6 +177,7 @@ gulp.task('bower', function () {
     .pipe(gulp.dest(yeoman.app + '/views/'))
 });
 
+
 ///////////
 // Build //
 ///////////
@@ -174,7 +186,7 @@ gulp.task('clean:dist', function (cb) {
   rimraf('./dist', cb);
 });
 
-gulp.task('client:build', ['html', 'styles'], function () {
+gulp.task('client:build', gulp.series('html', 'styles', function () {
   var jsFilter = $.filter('**/*.js');
   var cssFilter = $.filter('**/*.css');
 
@@ -185,17 +197,12 @@ gulp.task('client:build', ['html', 'styles'], function () {
     .pipe($.uglify())
     .pipe(jsFilter.restore())
     .pipe(cssFilter)
-    .pipe($.minifyCss({ cache: true }))
+    .pipe($.cleanCss({ cache: true }))
     .pipe(cssFilter.restore())
 /*    .pipe($.rev())
     .pipe($.revReplace())
 */    .pipe(gulp.dest(yeoman.dist));
-});
-
-gulp.task('html', function () {
-  return gulp.src(yeoman.app + '/views/**/*')
-    .pipe(gulp.dest(yeoman.dist + '/views'));
-});
+}));
 
 gulp.task('images', function () {
   return gulp.src(yeoman.app + '/images/**/*')
@@ -232,13 +239,13 @@ gulp.task('copy:extras', function () {
     .pipe(gulp.dest(yeoman.dist));
 });
 
-gulp.task('copy:fonts', ['dist:bower:fonts'], function () {
+gulp.task('copy:fonts', gulp.series('dist:bower:fonts', function () {
   return gulp.src(yeoman.app + '/fonts/**/*')
     .pipe(gulp.dest(yeoman.dist + '/fonts'));
-});
+}));
 
-gulp.task('build', ['clean:dist'], function () {
-  runSequence(['images', 'copy:extras', 'copy:json', 'copy:fonts', 'copy:cname', 'copy:404', 'copy:favicon', 'client:build']);
-});
+gulp.task('build', gulp.series('clean:dist', 
+    'images', 'copy:extras', 'copy:json', 'copy:fonts', 'copy:cname', 'copy:404', 'copy:favicon', 'client:build'
+));
 
-gulp.task('default', ['build']);
+gulp.task('default', gulp.series('build') );
