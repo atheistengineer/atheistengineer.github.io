@@ -8,7 +8,7 @@ var lazypipe = require('lazypipe');
 var rimraf = require('rimraf');
 var wiredep = require('wiredep').stream;
 var runSequence = require('run-sequence');
-var deploy      = require('gulp-gh-pages');
+var deploy = require('gulp-gh-pages');
 var flatten = require('gulp-flatten');
 
 var yeoman = {
@@ -33,7 +33,7 @@ var paths = {
   karma: 'karma.conf.js',
   views: {
     // main: yeoman.app + '/index.html',
-    main: [ yeoman.app + '/index.html' ], // yeoman.app + '/earthcalc/index.html'],
+    main: [yeoman.app + '/index.html'], // yeoman.app + '/earthcalc/index.html'],
     files: [yeoman.app + '/views/**/*.html']
   }
 };
@@ -62,7 +62,7 @@ var styles = lazypipe()
  *   */
 gulp.task('deploy', function () {
   return gulp.src("./dist/**/*")
-    .pipe(deploy({'branch':'master'}))
+    .pipe(deploy({ 'branch': 'master' }))
 });
 // Alias because I keep forgetting the name.
 gulp.task('publish', ['deploy'])
@@ -86,7 +86,7 @@ gulp.task('start:client', ['start:server', 'styles'], function () {
   openURL('http://localhost:9000');
 });
 
-gulp.task('start:server', function() {
+gulp.task('start:server', function () {
   $.connect.server({
     root: [yeoman.app, '.tmp'],
     livereload: true,
@@ -95,7 +95,7 @@ gulp.task('start:server', function() {
   });
 });
 
-gulp.task('start:server:test', function() {
+gulp.task('start:server:test', function () {
   $.connect.server({
     root: ['test', yeoman.app, '.tmp'],
     livereload: true,
@@ -132,7 +132,7 @@ gulp.task('serve', function (cb) {
     'watch', cb);
 });
 
-gulp.task('serve:prod', function() {
+gulp.task('serve:prod', function () {
   $.connect.server({
     root: [yeoman.dist],
     livereload: true,
@@ -149,7 +149,7 @@ gulp.task('test', ['start:server:test'], function () {
     }));
 });
 
-gulp.task('dist:bower:fonts', function() {
+gulp.task('dist:bower:fonts', function () {
   return gulp.src('./bower_components/**/*.{eot,svg,ttf,woff,woff2}')
     .pipe(flatten())
     .pipe(gulp.dest(yeoman.dist + '/fonts/'))
@@ -162,8 +162,8 @@ gulp.task('bower', function () {
       //  directory: 'bower_components/',
       ignorePath: '..'
     }))
-  .pipe(gulp.dest(yeoman.app))
-  .pipe(gulp.dest(yeoman.app + '/views/'))
+    .pipe(gulp.dest(yeoman.app))
+    .pipe(gulp.dest(yeoman.app + '/views/'))
 });
 
 ///////////
@@ -179,13 +179,13 @@ gulp.task('client:build', ['html', 'styles'], function () {
   var cssFilter = $.filter('**/*.css');
 
   return gulp.src(paths.views.main)
-    .pipe($.useref({searchPath: [yeoman.app, '.tmp']}))
+    .pipe($.useref({ searchPath: [yeoman.app, '.tmp'] }))
     .pipe(jsFilter)
     .pipe($.ngAnnotate())
     .pipe($.uglify())
     .pipe(jsFilter.restore())
     .pipe(cssFilter)
-    .pipe($.minifyCss({cache: true}))
+    .pipe($.minifyCss({ cache: true }))
     .pipe(cssFilter.restore())
 /*    .pipe($.rev())
     .pipe($.revReplace())
@@ -200,31 +200,31 @@ gulp.task('html', function () {
 gulp.task('images', function () {
   return gulp.src(yeoman.app + '/images/**/*')
     .pipe($.cache($.imagemin({
-        optimizationLevel: 5,
-        progressive: true,
-        interlaced: true
+      optimizationLevel: 5,
+      progressive: true,
+      interlaced: true
     })))
     .pipe(gulp.dest(yeoman.dist + '/images'));
 });
 
-gulp.task('copy:favicon', function() {
-    return gulp.src(yeoman.app + '/favicon.ico')
-      .pipe(gulp.dest(yeoman.dist));
+gulp.task('copy:favicon', function () {
+  return gulp.src(yeoman.app + '/favicon.ico')
+    .pipe(gulp.dest(yeoman.dist));
 });
 
-gulp.task('copy:json', function() {
-    return gulp.src(yeoman.app + '/bayes_models/*.json')
-      .pipe(gulp.dest(yeoman.dist + '/bayes_models/'));
+gulp.task('copy:json', function () {
+  return gulp.src(yeoman.app + '/bayes_models/*.json')
+    .pipe(gulp.dest(yeoman.dist + '/bayes_models/'));
 });
 
-gulp.task('copy:404', function() {
-    return gulp.src(yeoman.app + '/404.html')
-      .pipe(gulp.dest(yeoman.dist));
+gulp.task('copy:404', function () {
+  return gulp.src(yeoman.app + '/404.html')
+    .pipe(gulp.dest(yeoman.dist));
 });
 
-gulp.task('copy:cname', function() {
-    return gulp.src(yeoman.app + '/CNAME')
-      .pipe(gulp.dest(yeoman.dist ));
+gulp.task('copy:cname', function () {
+  return gulp.src(yeoman.app + '/CNAME')
+    .pipe(gulp.dest(yeoman.dist));
 });
 
 gulp.task('copy:extras', function () {
