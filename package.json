@@ -27,7 +27,7 @@
     "jshint-stylish": "^1.0.0",
     "karma": "0.12.37",
     "lazypipe": "^0.2.4",
-    "open": "0.0.5",
+    "open": "7.0.0",
     "rimraf": "^2.4.0",
     "run-sequence": "^1.1.1",
     "wiredep": "^2.2.2"
