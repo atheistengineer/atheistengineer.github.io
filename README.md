@@ -5,8 +5,9 @@ version 0.15.1.
 
 ## Build & development
 
-    npm install bower
+    sudo npm install -g bower  (or npm install --upgrade bower)
     bower install
+    npm install
     npm install gulp
 
 To build a release:
@@ -30,4 +31,4 @@ ha ha ha ha ha. No.
 The master branch is the website.  To deploy it, do:
 
     gulp build
-    gulp deploy 
+    gulp deploy
