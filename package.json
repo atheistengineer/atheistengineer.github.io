@@ -24,7 +24,7 @@
     "gulp-util": "^3.0.6",
     "gulp-watch": "^5.0.1",
     "jshint-stylish": "^1.0.0",
-    "karma": "^4.3.0",
+    "karma": "^6.1.1",
     "lazypipe": "^0.2.4",
     "open": "^6.4.0",
     "rimraf": "^2.4.0",
@@ -41,8 +41,10 @@
     "test": "karma start test/karma.conf.js"
   },
   "dependencies": {
+    "angular": "^1.8.2",
+    "gulp-clean-css": "^4.3.0",
     "gulp-flatten": "^0.4.0",
     "jshint": "^2.10.2",
-    "node-sass": "^4.12.0"
+    "node-sass": "^4.14.1"
   }
 }

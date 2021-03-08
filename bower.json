@@ -47,5 +47,8 @@
     "website"
   ],
   "license": "MIT",
-  "private": true
+  "private": true,
+  "resolutions": {
+    "angular": "1.8.2"
+  }
 }

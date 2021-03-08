@@ -114,32 +114,19 @@ gulp.task('start:server:test', function () {
 });
 
 gulp.task('watch', function () {
-  $.watch(paths.styles)
-    .pipe($.plumber())
-    .pipe(styles())
-    .pipe($.connect.reload());
-
-  $.watch(paths.views.files)
-    .pipe($.plumber())
-    .pipe($.connect.reload());
-
-  $.watch(paths.scripts)
-    .pipe($.plumber())
-    .pipe(lintScripts())
-    .pipe($.connect.reload());
-
-  $.watch(paths.test)
-    .pipe($.plumber())
-    .pipe(lintScripts());
-
-  gulp.watch('bower.json', ['bower']);
+  gulp.watch(paths.styles, gulp.series('styles'));
+  // This seems wrong . . .
+  // gulp.watch(paths.views.files, gulp.series('plumber'));
+  gulp.watch(paths.scripts, gulp.series('lint:scripts'));
+  gulp.watch(paths.test, gulp.series('lint:scripts'));
+  gulp.watch('bower.json', gulp.series('bower'));
 });
 
 gulp.task('start:client', gulp.series('start:server', 'styles', function () {
   openURL('http://localhost:9000');
 }));
 
-gulp.task('serve', 
+gulp.task('serve',
   gulp.series('clean:tmp', 'lint:scripts', gulp.parallel('start:client', 'watch'))
 );
 
@@ -244,7 +231,7 @@ gulp.task('copy:fonts', gulp.series('dist:bower:fonts', function () {
     .pipe(gulp.dest(yeoman.dist + '/fonts'));
 }));
 
-gulp.task('build', gulp.series('clean:dist', 
+gulp.task('build', gulp.series('clean:dist',
     'images', 'copy:extras', 'copy:json', 'copy:fonts', 'copy:cname', 'copy:404', 'copy:favicon', 'client:build'
 ));
 
