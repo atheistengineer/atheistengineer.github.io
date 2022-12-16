@@ -8,7 +8,7 @@ version 0.15.1.
     sudo npm install -g bower  (or npm install --upgrade bower)
     bower install
     npm install
-    npm install gulp
+    npm install -g gulp
 
 To build a release:
 
