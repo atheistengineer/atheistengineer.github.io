@@ -6,7 +6,7 @@
     "f": "^1.4.0",
     "grunt": "~1.0.1",
     "gulp": "^4.0.2",
-    "gulp-autoprefixer": "2.3.1",
+    "gulp-autoprefixer": "8.0.0",
     "gulp-cache": "^0.2.10",
     "gulp-connect": "^5.7.0",
     "gulp-filter": "^2.0.2",
